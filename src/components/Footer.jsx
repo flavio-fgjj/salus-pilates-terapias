@@ -29,7 +29,7 @@ const Footer = () => (
                 aria-label="Instagram"
               >
                 <img 
-                  src="/src/assets/instagram.png" 
+                      src="/assets/instagram.png"
                   alt="Instagram" 
                   className="w-4 h-4"
                 />
@@ -42,7 +42,7 @@ const Footer = () => (
                 aria-label="WhatsApp"
               >
                 <img 
-                  src="/src/assets/whatsapp.png" 
+                      src="/assets/whatsapp.png"
                   alt="WhatsApp" 
                   className="w-4 h-4"
                 />

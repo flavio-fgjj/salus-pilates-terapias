@@ -17,7 +17,7 @@ const Header = () => {
       <nav className="flex justify-between items-center px-6 py-4">
         <div className="flex items-center">
           <img 
-            src="/src/assets/logo-header.png" 
+              src="/assets/logo-header.png"
             alt="Salus Pilates e Terapias" 
             className="h-18 w-auto min-w-24"
           />
@@ -42,7 +42,7 @@ const Header = () => {
             aria-label="Instagram"
           >
             <img 
-              src="/src/assets/instagram.png" 
+                  src="/assets/instagram.png"
               alt="Instagram" 
               className="w-5 h-5"
             />
@@ -55,7 +55,7 @@ const Header = () => {
             aria-label="WhatsApp"
           >
             <img 
-              src="/src/assets/whatsapp.png" 
+                  src="/assets/whatsapp.png"
               alt="WhatsApp" 
               className="w-5 h-5"
             />

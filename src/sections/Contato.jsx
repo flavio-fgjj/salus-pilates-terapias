@@ -23,7 +23,7 @@ const Contato = () => (
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
         >
           <img 
-            src="/src/assets/e-mail.png" 
+                src="/assets/e-mail.png"
             alt="Email" 
             className="w-6 h-6"
           />
@@ -36,7 +36,7 @@ const Contato = () => (
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
         >
           <img 
-            src="/src/assets/instagram.png" 
+                src="/assets/instagram.png"
             alt="Instagram" 
             className="w-6 h-6"
           />
@@ -49,7 +49,7 @@ const Contato = () => (
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-emerald-50 text-emerald-600 border border-emerald-500 font-semibold transition"
         >
           <img 
-            src="/src/assets/whatsapp.png" 
+                src="/assets/whatsapp.png"
             alt="WhatsApp" 
             className="w-6 h-6"
           />

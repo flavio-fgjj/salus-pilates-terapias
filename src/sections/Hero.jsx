@@ -5,7 +5,7 @@ const Hero = () => (
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center lg:justify-start">
             <img 
-              src="/src/assets/logo.png" 
+              src="/assets/logo.png" 
               alt="Salus Pilates e Terapias" 
               className="max-w-full h-auto"
             />
