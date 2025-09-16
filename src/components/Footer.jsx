@@ -1,3 +1,6 @@
+import igIcon from '/assets/instagram.png';
+import waIcon from '/assets/whatsapp.png';
+
 const Footer = () => (
   <footer className="bg-gradient-to-b from-slate-800 to-slate-900 text-white py-12">
     <div className="w-full px-4 md:px-6 overflow-hidden">
@@ -28,11 +31,7 @@ const Footer = () => (
                 className="p-2 rounded-full bg-slate-700 hover:bg-[#B7D0CA] transition"
                 aria-label="Instagram"
               >
-                <img 
-                      src="/assets/instagram.png"
-                  alt="Instagram" 
-                  className="w-4 h-4"
-                />
+                <img src={igIcon} alt="Instagram" className="w-4 h-4" />
               </a>
               <a
                 href="https://wa.me/5513996124760"
@@ -41,11 +40,7 @@ const Footer = () => (
                 className="p-2 rounded-full bg-slate-700 hover:bg-emerald-500 transition"
                 aria-label="WhatsApp"
               >
-                <img 
-                      src="/assets/whatsapp.png"
-                  alt="WhatsApp" 
-                  className="w-4 h-4"
-                />
+                <img src={waIcon} alt="WhatsApp" className="w-4 h-4" />
               </a>
             </div>
           </div>

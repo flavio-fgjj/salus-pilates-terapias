@@ -1,5 +1,8 @@
 import { Link } from 'react-scroll';
 import { useState } from 'react';
+import logoHeader from '/assets/logo-header.png';
+import igIcon from '/assets/instagram.png';
+import waIcon from '/assets/whatsapp.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +20,7 @@ const Header = () => {
       <nav className="flex justify-between items-center px-6 py-4">
         <div className="flex items-center">
           <img 
-              src="/assets/logo-header.png"
+              src={logoHeader}
             alt="Salus Pilates e Terapias" 
             className="h-18 w-auto min-w-24"
           />
@@ -42,7 +45,7 @@ const Header = () => {
             aria-label="Instagram"
           >
             <img 
-                  src="/assets/instagram.png"
+                  src={igIcon}
               alt="Instagram" 
               className="w-5 h-5"
             />
@@ -55,7 +58,7 @@ const Header = () => {
             aria-label="WhatsApp"
           >
             <img 
-                  src="/assets/whatsapp.png"
+                  src={waIcon}
               alt="WhatsApp" 
               className="w-5 h-5"
             />

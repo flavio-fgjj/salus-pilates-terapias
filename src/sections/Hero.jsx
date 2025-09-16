@@ -1,3 +1,5 @@
+import logo from '/assets/logo.png';
+
 const Hero = () => (
   <section className="py-20 bg-white">
     <div className="w-full px-4 md:px-6">
@@ -5,7 +7,7 @@ const Hero = () => (
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="flex justify-center lg:justify-start">
             <img 
-              src="/assets/logo.png" 
+              src={logo} 
               alt="Salus Pilates e Terapias" 
               className="max-w-full h-auto"
             />

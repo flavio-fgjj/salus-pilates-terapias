@@ -1,3 +1,7 @@
+import emailIcon from '/assets/e-mail.png';
+import igIcon from '/assets/instagram.png';
+import waIcon from '/assets/whatsapp.png';
+
 const Contato = () => (
   <section id="contato" className="py-20 bg-white text-center">
     <div className="w-full px-4 md:px-6 overflow-hidden">
@@ -22,11 +26,7 @@ const Contato = () => (
           href="mailto:contato@salus.com"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
         >
-          <img 
-                src="/assets/e-mail.png"
-            alt="Email" 
-            className="w-6 h-6"
-          />
+          <img src={emailIcon} alt="Email" className="w-6 h-6" />
           Email
         </a>
         <a
@@ -35,11 +35,7 @@ const Contato = () => (
           rel="noreferrer"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
         >
-          <img 
-                src="/assets/instagram.png"
-            alt="Instagram" 
-            className="w-6 h-6"
-          />
+          <img src={igIcon} alt="Instagram" className="w-6 h-6" />
           Instagram
         </a>
         <a
@@ -48,11 +44,7 @@ const Contato = () => (
           rel="noreferrer"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-emerald-50 text-emerald-600 border border-emerald-500 font-semibold transition"
         >
-          <img 
-                src="/assets/whatsapp.png"
-            alt="WhatsApp" 
-            className="w-6 h-6"
-          />
+          <img src={waIcon} alt="WhatsApp" className="w-6 h-6" />
           WhatsApp
         </a>
       </div>
