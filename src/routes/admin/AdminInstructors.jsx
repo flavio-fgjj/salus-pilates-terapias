@@ -4,7 +4,7 @@ import { db } from '../../firebase.js';
 import { Users, MapPin } from 'react-feather';
 
 const allDisciplines = [
-  'Pilates', 'Ballet Infantil', 'Jiu-Jitsu', 'Acupuntura', 'Massagem', 'Quiropraxia', 'Reiki',
+  'Pilates', 'Ballet Infantil', 'Jiu-Jitsu', 'Acupuntura', 'Massagem', 'Quiropraxia', 'Reiki', 'Auriculoterapia ', 'Cone Hindu / Chines', 'Yoga'
 ];
 
 const AdminInstructors = () => {

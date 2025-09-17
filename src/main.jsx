@@ -10,6 +10,8 @@ import AdminDashboard from './routes/admin/AdminDashboard';
 import AdminUsers from './routes/admin/AdminUsers';
 import AdminStudents from './routes/admin/AdminStudents';
 import AdminInstructors from './routes/admin/AdminInstructors';
+import AdminPayments from './routes/admin/AdminPayments';
+import AdminReports from './routes/admin/AdminReports';
 import AdminRoute from './routes/admin/AdminRoute';
 import ProtectedRoute from './routes/admin/ProtectedRoute';
 import { AuthProvider } from './routes/admin/AuthContext';
@@ -55,6 +57,22 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <AdminInstructors />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'pagamentos',
+        element: (
+          <ProtectedRoute>
+            <AdminPayments />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'relatorios',
+        element: (
+          <ProtectedRoute>
+            <AdminReports />
           </ProtectedRoute>
         ),
       },

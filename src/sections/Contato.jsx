@@ -39,7 +39,7 @@ const Contato = () => (
           Instagram
         </a>
         <a
-          href="https://wa.me/5511999999999"
+          href="https://wa.me/5513996124760"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-emerald-50 text-emerald-600 border border-emerald-500 font-semibold transition"

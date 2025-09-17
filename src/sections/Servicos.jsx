@@ -15,7 +15,8 @@ const Servicos = () => (
             { title: 'Quiropraxia Seitai e New Seitai', desc: 'Alinhamento corporal e liberação de tensões através de ajustes precisos.' },
             { title: 'Radiestesia Terapêutica', desc: 'Avaliação e harmonização energética para saúde integral.' },
             { title: 'Reiki', desc: 'Canalização de energia vital para equilíbrio, relaxamento e autocura.' },
-            { title: 'Hindu / Chinês', desc: 'Massagens tradicionais para desbloqueio energético e revitalização do corpo.' },            
+            { title: 'Cone Hindu / Chines', desc: 'Massagens tradicionais para desbloqueio energético e revitalização do corpo.' },
+            { title: 'Yoga', desc: 'Prática ancestral que une corpo, mente e espírito por meio de posturas físicas, exercícios respiratórios e meditação.' }
           ].map(({ title, desc }) => (
             <div
               key={title}

@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen } from 'react-feather';
+import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen, CreditCard, Smile, TrendingUp, DollarSign } from 'react-feather';
 import { useState } from 'react';
 import { useUserStore } from '../../store/useUserStore.js';
 
@@ -45,7 +45,7 @@ const AdminLayout = () => {
             style={isActive('/admin/alunos') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
             onClick={closeMobileMenu}
           >
-            <BookOpen size={18} /> Alunos
+            <Smile size={18} /> Alunos
           </Link>
         )}
         {user && (
@@ -70,6 +70,28 @@ const AdminLayout = () => {
             <User size={18} /> Usuários
           </Link>
         )}
+
+        {user && role === 'admin' && (
+          <Link
+            to="/admin/pagamentos"
+            className="flex items-center gap-2 px-3 py-2 rounded-md"
+            style={isActive('/admin/pagamentos') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+            onClick={closeMobileMenu}
+          >
+            <CreditCard size={18} /> Pagamentos
+          </Link>
+        )}
+
+         {user && role === 'admin' && (
+           <Link
+             to="/admin/relatorios"
+             className="flex items-center gap-2 px-3 py-2 rounded-md"
+             style={isActive('/admin/relatorios') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+             onClick={closeMobileMenu}
+           >
+             <TrendingUp size={18} /> Relatórios
+           </Link>
+         )}
 
         {!user && (
           <>

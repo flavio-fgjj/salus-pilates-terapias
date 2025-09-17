@@ -13,6 +13,15 @@ const disciplines = [
   { value: 'reiki', label: 'Reiki' },
 ];
 
+const frequencias = [
+  { value: '1x', label: '1x por semana' },
+  { value: '2x', label: '2x por semana' },
+  { value: '3x', label: '3x por semana' },
+  { value: '4x', label: '4x por semana' },
+  { value: '5x', label: '5x por semana' },
+  { value: 'avulsa', label: 'Aula avulsa' },
+];
+
 const paymentMethods = [
   { value: 'pix', label: 'PIX' },
   { value: 'cartao', label: 'Cartão de Crédito' },
@@ -22,26 +31,29 @@ const paymentMethods = [
 ];
 
 const AdminStudents = () => {
-  const [form, setForm] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    dataNascimento: '',
-    documento: '',
-    disciplina: '',
-    responsavel: '',
-    telefoneResponsavel: '',
-    cep: '',
-    logradouro: '',
-    numero: '',
-    complemento: '',
-    bairro: '',
-    cidade: '',
-    estado: '',
-    optinInstagram: false,
-    formaPagamento: '',
-    dataVencimento: '',
-  });
+         const [form, setForm] = useState({
+           nome: '',
+           email: '',
+           telefone: '',
+           dataNascimento: '',
+           documento: '',
+           disciplina: '',
+           frequencia: '',
+           valorMensalidade: '',
+           valorAulaAvulsa: '',
+           responsavel: '',
+           telefoneResponsavel: '',
+           cep: '',
+           logradouro: '',
+           numero: '',
+           complemento: '',
+           bairro: '',
+           cidade: '',
+           estado: '',
+           optinInstagram: false,
+           formaPagamento: '',
+           dataVencimento: '',
+         });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [list, setList] = useState([]);
@@ -124,8 +136,6 @@ const AdminStudents = () => {
       <p>O Contratado compromete-se a ministrar/executar:</p>
       <table>
         <tr><td>${form.disciplina || '____________________________________________________'}</td></tr>
-        <tr><td>____________________________________________________</td></tr>
-        <tr><td>____________________________________________________</td></tr>
       </table>
 
       <h2>Cláusula 2: Horários</h2>
@@ -145,7 +155,7 @@ const AdminStudents = () => {
       <p>Na semana de Natal e na semana de Ano Novo o Studio entra em recesso, sendo a mensalidade paga integralmente, sem reposições, para garantir o horário do Contratante.</p>
 
       <h2>Cláusula 7: Pagamento, planos e valores</h2>
-      <p>Opções de atividades: ( ) PILATES | ( ) BALLET INFANTIL | ( ) DANÇA | ( ) MEDICINA CHINESA | ( ) QUIROPRAXIA SEITAI | ( ) REIKI | ( ) MASSAGEM | ( ) RADIESTESIA TERAPÊUTICA | ( ) CONE HINDU | ( ) ACUPUNTURA ESTÉTICA</p>
+      <p>Opções de atividades: ( ) PILATES | ( ) BALLET INFANTIL | ( ) DANÇA | ( ) MEDICINA CHINESA | ( ) QUIROPRAXIA SEITAI | ( ) REIKI | ( ) MASSAGEM | ( ) RADIESTESIA TERAPÊUTICA | ( ) CONE HINDU / CHINES | ( ) ACUPUNTURA ESTÉTICA | ( ) YOGA</p>
       <p>O pagamento será feito todo dia ______ de cada mês.</p>
       <table>
         <tr><th>Frequência</th><th>Valor</th></tr>
@@ -339,26 +349,29 @@ const AdminStudents = () => {
         setMessage('Aluno cadastrado com sucesso!');
       }
       setEditingId(null);
-      setForm({
-        nome: '',
-        email: '',
-        telefone: '',
-        dataNascimento: '',
-        documento: '',
-        disciplina: '',
-        responsavel: '',
-        telefoneResponsavel: '',
-        cep: '',
-        logradouro: '',
-        numero: '',
-        complemento: '',
-        bairro: '',
-        cidade: '',
-        estado: '',
-        optinInstagram: false,
-        formaPagamento: '',
-        dataVencimento: '',
-      });
+             setForm({
+               nome: '',
+               email: '',
+               telefone: '',
+               dataNascimento: '',
+               documento: '',
+               disciplina: '',
+               frequencia: '',
+               valorMensalidade: '',
+               valorAulaAvulsa: '',
+               responsavel: '',
+               telefoneResponsavel: '',
+               cep: '',
+               logradouro: '',
+               numero: '',
+               complemento: '',
+               bairro: '',
+               cidade: '',
+               estado: '',
+               optinInstagram: false,
+               formaPagamento: '',
+               dataVencimento: '',
+             });
     } catch (error) {
       setMessage('Erro ao cadastrar aluno. Tente novamente.');
       console.error('Erro:', error);
@@ -396,6 +409,9 @@ const AdminStudents = () => {
       dataNascimento: student.dataNascimento || '',
       documento: student.documento || '',
       disciplina: student.disciplina || '',
+      frequencia: student.frequencia || '',
+      valorMensalidade: student.valorMensalidade || '',
+      valorAulaAvulsa: student.valorAulaAvulsa || '',
       responsavel: student.responsavel || '',
       telefoneResponsavel: student.telefoneResponsavel || '',
       cep: student.cep || '',
@@ -416,6 +432,7 @@ const AdminStudents = () => {
     setEditingId(null);
     setForm({
       nome: '', email: '', telefone: '', dataNascimento: '', documento: '', disciplina: '',
+      frequencia: '', valorMensalidade: '', valorAulaAvulsa: '',
       responsavel: '', telefoneResponsavel: '', cep: '', logradouro: '', numero: '', complemento: '',
       bairro: '', cidade: '', estado: '', optinInstagram: false, formaPagamento: '', dataVencimento: '',
     });
@@ -565,34 +582,17 @@ const AdminStudents = () => {
                 </div>
               ) : null; })()}
             </div>
-            <div>
-              <label className="text-sm block mb-1">Documento (CPF/RG)</label>
-              <input
-                name="documento"
-                value={form.documento}
-                onChange={handleChange}
-                placeholder="000.000.000-00"
-                className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
-              />
-            </div>
-            <div>
-              <label className="text-sm block mb-1">Disciplina *</label>
-              <select
-                name="disciplina"
-                value={form.disciplina}
-                onChange={handleChange}
-                required
-                className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
-              >
-                <option value="">Selecione uma disciplina</option>
-                {disciplines.map(d => (
-                  <option key={d.value} value={d.value}>{d.label}</option>
-                ))}
-              </select>
-              {errors.disciplina && <div className="text-xs mt-1" style={{ color: '#ff6b6b' }}>{errors.disciplina}</div>}
-            </div>
+                           <div>
+                             <label className="text-sm block mb-1">Documento (CPF/RG)</label>
+                             <input
+                               name="documento"
+                               value={form.documento}
+                               onChange={handleChange}
+                               placeholder="000.000.000-00"
+                               className="w-full rounded px-3 py-2"
+                               style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                             />
+                           </div>
           </div>
               </div>
               )}
@@ -719,53 +719,114 @@ const AdminStudents = () => {
               )}
 
               {/* Configurações */}
-              {activeTab === 'config' && (
-              <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <CreditCard size={18} />
-            Configurações
-          </h3>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  name="optinInstagram"
-                  type="checkbox"
-                  checked={form.optinInstagram}
-                  onChange={handleChange}
-                />
-                Autorizo o uso de fotos no Instagram da marca
-              </label>
-            </div>
-            <div>
-              <label className="text-sm block mb-1">Forma de Pagamento</label>
-              <select
-                name="formaPagamento"
-                value={form.formaPagamento}
-                onChange={handleChange}
-                className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
-              >
-                <option value="">Selecione a forma de pagamento</option>
-                {paymentMethods.map(p => (
-                  <option key={p.value} value={p.value}>{p.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-sm block mb-1">Data de Vencimento</label>
-              <input
-                name="dataVencimento"
-                type="date"
-                value={form.dataVencimento}
-                onChange={handleChange}
-                className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
-              />
-            </div>
-          </div>
-              </div>
-              )}
+                     {activeTab === 'config' && (
+                       <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                           <CreditCard size={18} />
+                           Configurações
+                         </h3>
+                         <div className="grid sm:grid-cols-2 gap-4">
+                           <div>
+                             <label className="text-sm block mb-1">Disciplina *</label>
+                             <select
+                               name="disciplina"
+                               value={form.disciplina}
+                               onChange={handleChange}
+                               required
+                               className="w-full rounded px-3 py-2"
+                               style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                             >
+                               <option value="">Selecione uma disciplina</option>
+                               {disciplines.map(d => (
+                                 <option key={d.value} value={d.value}>{d.label}</option>
+                               ))}
+                             </select>
+                             {errors.disciplina && <div className="text-xs mt-1" style={{ color: '#ff6b6b' }}>{errors.disciplina}</div>}
+                           </div>
+                           <div>
+                             <label className="text-sm block mb-1">Frequência</label>
+                             <select
+                               name="frequencia"
+                               value={form.frequencia}
+                               onChange={handleChange}
+                               className="w-full rounded px-3 py-2"
+                               style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                             >
+                               <option value="">Selecione a frequência</option>
+                               {frequencias.map(f => (
+                                 <option key={f.value} value={f.value}>{f.label}</option>
+                               ))}
+                             </select>
+                           </div>
+                           {form.frequencia === 'avulsa' ? (
+                             <div>
+                               <label className="text-sm block mb-1">Valor da Aula Avulsa (R$)</label>
+                               <input
+                                 name="valorAulaAvulsa"
+                                 type="number"
+                                 step="0.01"
+                                 value={form.valorAulaAvulsa}
+                                 onChange={handleChange}
+                                 placeholder="0,00"
+                                 className="w-full rounded px-3 py-2"
+                                 style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                               />
+                             </div>
+                           ) : (
+                             <div>
+                               <label className="text-sm block mb-1">Valor da Mensalidade (R$)</label>
+                               <input
+                                 name="valorMensalidade"
+                                 type="number"
+                                 step="0.01"
+                                 value={form.valorMensalidade}
+                                 onChange={handleChange}
+                                 placeholder="0,00"
+                                 className="w-full rounded px-3 py-2"
+                                 style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                               />
+                             </div>
+                           )}
+                           <div>
+                             <label className="text-sm block mb-1">Forma de Pagamento</label>
+                             <select
+                               name="formaPagamento"
+                               value={form.formaPagamento}
+                               onChange={handleChange}
+                               className="w-full rounded px-3 py-2"
+                               style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                             >
+                               <option value="">Selecione a forma de pagamento</option>
+                               {paymentMethods.map(p => (
+                                 <option key={p.value} value={p.value}>{p.label}</option>
+                               ))}
+                             </select>
+                           </div>
+                           <div>
+                             <label className="text-sm block mb-1">Data de Vencimento</label>
+                             <input
+                               name="dataVencimento"
+                               type="date"
+                               value={form.dataVencimento}
+                               onChange={handleChange}
+                               className="w-full rounded px-3 py-2"
+                               style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                             />
+                           </div>
+                           <div className="sm:col-span-2">
+                             <label className="flex items-center gap-2 text-sm">
+                               <input
+                                 name="optinInstagram"
+                                 type="checkbox"
+                                 checked={form.optinInstagram}
+                                 onChange={handleChange}
+                               />
+                               Autorizo o uso de fotos no Instagram da marca
+                             </label>
+                           </div>
+                         </div>
+                       </div>
+                     )}
 
               {message && (
           <div className={`text-sm p-3 rounded ${message.includes('sucesso') ? 'text-green-400' : 'text-red-400'}`}>
