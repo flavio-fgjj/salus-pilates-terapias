@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
           const data = snap.data();
           setProfile(data || null);
           setRole(data?.role || null);
+          setProfile({ role: data?.role, profile: data });
           if (data && data.active === false) {
             await signOut(auth);
           }

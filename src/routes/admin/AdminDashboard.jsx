@@ -23,7 +23,10 @@ const AdminDashboard = () => {
     { title: 'Relatórios', icon: BarChart, description: 'Visualizar dados e estatísticas' }
   ];
 
-  const { role: storeRole, email: storeEmail, profile } = useUserStore();
+  const userStore = useUserStore();
+  const storeRole = userStore?.role;
+  const storeEmail = userStore?.email;
+  const profile = userStore?.profile;
 
   // Agenda state
   const [instructors, setInstructors] = useState([]);

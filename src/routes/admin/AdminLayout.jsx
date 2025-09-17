@@ -6,7 +6,8 @@ import { useUserStore } from '../../store/useUserStore.js';
 
 const AdminLayout = () => {
   const { user, logout } = useAuth();
-  const { role } = useUserStore();
+  const userStore = useUserStore();
+  const role = userStore?.role;
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isActive = (path) => location.pathname === path;
