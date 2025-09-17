@@ -5,7 +5,7 @@ import waIcon from '/assets/whatsapp.png';
 const Contato = () => (
   <section id="contato" className="py-20 bg-white text-center">
     <div className="w-full px-4 md:px-6 overflow-hidden">
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Nosso Endereço em Praia Grande SP</h2>
+      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Nosso Endereço</h2>
       <p className="text-slate-600 max-w-2xl mx-auto mb-8">Fale com a gente ou venha nos visitar. Estamos localizados na Av. Pres. Kennedy, Vila Caiçara, Praia Grande - SP.</p>
     </div>
     <div className="w-full h-[400px] max-w-5xl mx-auto mb-6 px-4 md:px-6">

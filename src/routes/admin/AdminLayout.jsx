@@ -1,0 +1,163 @@
+import { Outlet, Link, useLocation } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen } from 'react-feather';
+import { useState } from 'react';
+import { useUserStore } from '../../store/useUserStore.js';
+
+const AdminLayout = () => {
+  const { user, logout } = useAuth();
+  const { role } = useUserStore();
+  const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isActive = (path) => location.pathname === path;
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    closeMobileMenu();
+  };
+
+  const MenuItems = () => (
+    <>
+      <div className="flex-1">
+        {user && (
+          <Link
+            to="/admin/dashboard"
+            className="flex items-center gap-2 px-3 py-2 rounded-md"
+            style={isActive('/admin/dashboard') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+            onClick={closeMobileMenu}
+          >
+            <Home size={18} /> Dashboard
+          </Link>
+        )}
+
+        {user && (
+          <Link
+            to="/admin/alunos"
+            className="flex items-center gap-2 px-3 py-2 rounded-md"
+            style={isActive('/admin/alunos') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+            onClick={closeMobileMenu}
+          >
+            <BookOpen size={18} /> Alunos
+          </Link>
+        )}
+        {user && (
+          <Link
+            to="/admin/instrutores"
+            className="flex items-center gap-2 px-3 py-2 rounded-md"
+            style={isActive('/admin/instrutores') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+            onClick={closeMobileMenu}
+          >
+            <BookOpen size={18} /> Instrutores
+          </Link>
+        )}
+        
+
+        {user && role === 'admin' && (
+          <Link
+            to="/admin/usuarios"
+            className="flex items-center gap-2 px-3 py-2 rounded-md"
+            style={isActive('/admin/usuarios') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+            onClick={closeMobileMenu}
+          >
+            <User size={18} /> Usuários
+          </Link>
+        )}
+
+        {!user && (
+          <>
+            <Link
+              to="/admin/login"
+              className="flex items-center gap-2 px-3 py-2 rounded-md"
+              style={isActive('/admin/login') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+              onClick={closeMobileMenu}
+            >
+              <LogIn size={18} /> Login
+            </Link>
+            <Link
+              to="/admin/signup"
+              className="flex items-center gap-2 px-3 py-2 rounded-md"
+              style={isActive('/admin/signup') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
+              onClick={closeMobileMenu}
+            >
+              <UserPlus size={18} /> Criar usuário
+            </Link>
+          </>
+        )}
+      </div>
+
+      {user && (
+        <div className="pb-4">
+          <button
+            onClick={handleLogout}
+            className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md"
+            style={{ backgroundColor: 'transparent', color: '#ffffff' }}
+          >
+            <LogOut size={18} /> Sair
+          </button>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: '#1e1e2f', color: '#e6e6f0' }}>
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center justify-between px-4 py-3" style={{ backgroundColor: '#1d8cf8' }}>
+        <div className="font-extrabold text-white text-lg">Salus Pilates e Terapias</div>
+        <button
+          onClick={toggleMobileMenu}
+          className="p-2 rounded-md text-white hover:bg-white/10"
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <div 
+            className="absolute inset-0 bg-black/50" 
+            onClick={closeMobileMenu}
+          />
+          <div 
+            className="absolute top-0 right-0 h-full w-64 flex flex-col"
+            style={{ backgroundColor: '#1d8cf8' }}
+          >
+            <div className="px-4 py-4 font-extrabold text-white text-lg border-b border-white/20">
+              Menu
+            </div>
+            <nav className="px-2 py-2 space-y-1 text-sm flex-1 flex flex-col">
+              <MenuItems />
+            </nav>
+          </div>
+        </div>
+      )}
+
+      <div className="flex">
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:flex h-screen sticky top-0 flex-col" style={{ width: 240, backgroundColor: '#1d8cf8' }}>
+          <div className="px-4 py-4 font-extrabold text-white text-lg">Salus Pilates e Terapias</div>
+          <nav className="px-2 py-2 space-y-1 text-sm flex-1 flex flex-col">
+            <MenuItems />
+          </nav>
+        </aside>
+
+        <main className="flex-1 px-4 md:px-6 py-4 md:py-8">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default AdminLayout;
+
+

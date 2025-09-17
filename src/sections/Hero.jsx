@@ -17,7 +17,7 @@ const Hero = () => (
               Pilates é equilíbrio, força e saúde
             </h1>
             <p className="mt-4 md:mt-6 text-lg md:text-xl text-slate-600 max-w-2xl">
-              Recupere sua postura, respiração e energia com aulas pensadas para você. Estúdio de Pilates e Terapias em Praia Grande SP.
+              Recupere sua postura, respiração e energia com aulas pensadas para você.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
               <a href="#contato" className="inline-flex items-center justify-center rounded-md bg-[#B7D0CA] hover:brightness-95 text-slate-900 font-semibold px-6 py-3 shadow-lg/30 transition">

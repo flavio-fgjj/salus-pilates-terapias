@@ -1,7 +1,7 @@
 const Servicos = () => (
   <section id="servicos" className="py-20 bg-gradient-to-b from-slate-50 to-white text-center">
     <div className="w-full px-4 md:px-6 overflow-hidden">
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Nossos Serviços em Praia Grande SP</h2>
+      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4">Nossas Terapias</h2>
       <p className="text-slate-600 max-w-2xl mx-auto mb-12">Terapias complementares e atividades para equilibrar corpo e mente. Acupuntura, Massagem, Quiropraxia, Reiki e atividades infantis em Praia Grande.</p>
       
       {/* Terapias */}
@@ -9,11 +9,13 @@ const Servicos = () => (
         <h3 className="text-2xl font-bold mb-8 text-[#B7D0CA]">Terapias</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {[
-            { title: 'Acupuntura', desc: 'Terapêutica e estética para equilíbrio do corpo e bem-estar.' },
-            { title: 'Massagem', desc: 'Alívio de tensões e relaxamento profundo para o corpo.' },
-            { title: 'Quiropraxia', desc: 'Ajustes vertebrais para alinhamento e alívio de dores.' },
-            { title: 'Radiestesia Terapêutica', desc: 'Técnica de diagnóstico e tratamento energético.' },
-            { title: 'Reiki', desc: 'Técnica japonesa para redução de estresse e cura energética.' }
+            { title: 'Acupuntura', desc: 'Tratamento terapêutico que promove equilíbrio físico, mental e energético.' },
+            { title: 'Auriculoterapia', desc: 'Estimulação de pontos na orelha para alívio de dores e equilíbrio emocional.' },
+            { title: 'Massagem', desc: 'Técnicas manuais para relaxamento profundo, bem-estar e renovação do corpo.' },
+            { title: 'Quiropraxia Seitai e New Seitai', desc: 'Alinhamento corporal e liberação de tensões através de ajustes precisos.' },
+            { title: 'Radiestesia Terapêutica', desc: 'Avaliação e harmonização energética para saúde integral.' },
+            { title: 'Reiki', desc: 'Canalização de energia vital para equilíbrio, relaxamento e autocura.' },
+            { title: 'Hindu / Chinês', desc: 'Massagens tradicionais para desbloqueio energético e revitalização do corpo.' },            
           ].map(({ title, desc }) => (
             <div
               key={title}
@@ -30,7 +32,7 @@ const Servicos = () => (
       </div>
 
       {/* Atividades Infantis */}
-      <div>
+      {/* <div>
         <h3 className="text-2xl font-bold mb-8 text-[#B7D0CA]">Atividades Infantis</h3>
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
           {[
@@ -49,7 +51,7 @@ const Servicos = () => (
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   </section>
 );
