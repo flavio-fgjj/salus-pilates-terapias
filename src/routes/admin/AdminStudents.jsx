@@ -456,7 +456,7 @@ const AdminStudents = () => {
     <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Users size={20} />
-        <h2 className="text-xl font-bold">Cadastro de Alunos</h2>
+        <h2 className="text-xl font-bold">Cadastro de Alunos/Pacientes</h2>
       </div>
 
       {/* Listagem e Busca */}
@@ -474,7 +474,7 @@ const AdminStudents = () => {
             Mostrar inativos
           </label>
           <button type="button" onClick={newStudent} className="px-3 py-2 rounded font-semibold" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>
-            Novo aluno
+            Novo
           </button>
         </div>
         <div className="overflow-auto">
@@ -519,7 +519,7 @@ const AdminStudents = () => {
                  <div className="absolute inset-x-0 top-2 mx-auto max-w-4xl w-full rounded-lg p-4 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold flex items-center gap-2" style={{ color: '#e6e6f0' }}>
-                <Users size={18} /> {editingId ? 'Editar Aluno' : 'Novo Aluno'}
+                <Users size={18} /> {editingId ? 'Editar Aluno/Paciente' : 'Novo Aluno/Paciente'}
               </h3>
               <button onClick={() => setShowFormModal(false)} className="px-3 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Fechar</button>
             </div>

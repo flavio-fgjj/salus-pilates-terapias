@@ -46,7 +46,7 @@ const AdminLayout = () => {
             style={isActive('/admin/alunos') ? { backgroundColor: '#1b7edc', color: '#fff' } : { color: '#ffffff' }}
             onClick={closeMobileMenu}
           >
-            <Smile size={18} /> Alunos
+            <Smile size={18} /> Alunos / Pacientes
           </Link>
         )}
         {user && (

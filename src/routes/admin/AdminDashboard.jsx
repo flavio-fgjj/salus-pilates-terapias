@@ -19,7 +19,7 @@ const AdminDashboard = () => {
     { title: 'Agenda', icon: Calendar, description: 'Gerenciar horários e agendamentos' },
     { title: 'Frequência', icon: UserCheck, description: 'Controle de presença dos alunos' },
     { title: 'Cadastrar Instrutores', icon: Users, description: 'Adicionar novos instrutores' },
-    { title: 'Cadastrar Alunos', icon: BookOpen, description: 'Registrar novos alunos' },
+    { title: 'Cadastrar Alunos/Pacientes', icon: BookOpen, description: 'Registrar novos alunos/pacientes' },
     { title: 'Relatórios', icon: BarChart, description: 'Visualizar dados e estatísticas' }
   ];
 
@@ -195,7 +195,7 @@ const AdminDashboard = () => {
                   <div>
                     <div className="font-semibold">{item.startTime} - {item.endTime} • {item.discipline || 'Atividade'}</div>
                     <div className="text-sm" style={{ color: '#cdd4e2' }}>
-                      Instrutor: {item.instructor?.nome || '—'} • Alunos: {(item.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}
+                      Instrutor: {item.instructor?.nome || '—'} • Alunos/Pacientes: {(item.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}
                     </div>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
               <div>
-                <label className="text-sm">Alunos</label>
+                <label className="text-sm">Alunos/Pacientes</label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {students.map(s => (
                     <button type="button" key={s.id} onClick={() => setForm(f => ({ ...f, studentIds: f.studentIds.includes(s.id) ? f.studentIds.filter(id => id !== s.id) : [...f.studentIds, s.id] }))} className="px-3 py-1.5 rounded text-sm"
