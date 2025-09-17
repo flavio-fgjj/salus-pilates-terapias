@@ -4,6 +4,7 @@ import { db } from '../../firebase.js';
 import { Users, MapPin, Calendar, CreditCard } from 'react-feather';
 
 const disciplines = [
+  { value: 'auriculoterapia', label: 'Auriculoterapia' },
   { value: 'pilates', label: 'Pilates' },
   { value: 'ballet', label: 'Ballet Infantil' },
   { value: 'jiu-jitsu', label: 'Jiu-Jitsu' },
@@ -11,6 +12,10 @@ const disciplines = [
   { value: 'massagem', label: 'Massagem' },
   { value: 'quiropraxia', label: 'Quiropraxia' },
   { value: 'reiki', label: 'Reiki' },
+  { value: 'radiestesia', label: 'Radiestesia' },
+  { value: 'cone hindu / chines', label: 'Cone Hindu / Chines' },
+  { value: 'yoga', label: 'Yoga' },
+
 ];
 
 const frequencias = [
@@ -508,17 +513,17 @@ const AdminStudents = () => {
       </div>
 
       {/* Formulário em Modal */}
-      {showFormModal && (
-        <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowFormModal(false)} />
-          <div className="absolute inset-x-0 top-6 mx-auto max-w-4xl w-full rounded-lg p-6 space-y-6" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+             {showFormModal && (
+               <div className="fixed inset-0 z-50">
+                 <div className="absolute inset-0 bg-black/50" onClick={() => setShowFormModal(false)} />
+                 <div className="absolute inset-x-0 top-2 mx-auto max-w-4xl w-full rounded-lg p-4 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold flex items-center gap-2" style={{ color: '#e6e6f0' }}>
                 <Users size={18} /> {editingId ? 'Editar Aluno' : 'Novo Aluno'}
               </h3>
               <button onClick={() => setShowFormModal(false)} className="px-3 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Fechar</button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Abas */}
               <div className="flex gap-2 flex-wrap" role="tablist" onKeyDown={handleTabsKeyDown} tabIndex={0}>
                 <button type="button" role="tab" aria-selected={activeTab === 'pessoais'} onClick={() => setActiveTab('pessoais')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'pessoais' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Dados pessoais</button>
@@ -527,10 +532,10 @@ const AdminStudents = () => {
                 <button type="button" role="tab" aria-selected={activeTab === 'config'} onClick={() => setActiveTab('config')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'config' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Configurações</button>
               </div>
               {/* Dados Pessoais */}
-              {activeTab === 'pessoais' && (
-              <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users size={18} />Dados Pessoais</h3>
-          <div className="grid sm:grid-cols-2 gap-4">
+                     {activeTab === 'pessoais' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><Users size={18} />Dados Pessoais</h3>
+                         <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <label className="text-sm block mb-1">Nome Completo *</label>
               <input
@@ -598,10 +603,10 @@ const AdminStudents = () => {
               )}
 
               {/* Responsável */}
-              {activeTab === 'responsavel' && (
-              <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-          <h3 className="text-lg font-semibold mb-4">Responsável (para menores)</h3>
-          <div className="grid sm:grid-cols-2 gap-4">
+                     {activeTab === 'responsavel' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h3 className="text-lg font-semibold mb-3">Responsável (para menores)</h3>
+                         <div className="grid sm:grid-cols-2 gap-3">
             <div>
               <label className="text-sm block mb-1">Nome do Responsável</label>
               <input
@@ -630,13 +635,13 @@ const AdminStudents = () => {
               )}
 
               {/* Endereço */}
-              {activeTab === 'endereco' && (
-              <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <MapPin size={18} />
-            Endereço
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {activeTab === 'endereco' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                           <MapPin size={18} />
+                           Endereço
+                         </h3>
+                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
               <label className="text-sm block mb-1">CEP</label>
               <input
@@ -720,12 +725,12 @@ const AdminStudents = () => {
 
               {/* Configurações */}
                      {activeTab === 'config' && (
-                       <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                            <CreditCard size={18} />
                            Configurações
                          </h3>
-                         <div className="grid sm:grid-cols-2 gap-4">
+                         <div className="grid sm:grid-cols-2 gap-3">
                            <div>
                              <label className="text-sm block mb-1">Disciplina *</label>
                              <select
@@ -834,32 +839,32 @@ const AdminStudents = () => {
           </div>
               )}
 
-              <div className="grid sm:grid-cols-3 gap-3">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full font-semibold rounded px-4 py-3"
-                  style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}
-                >
-                  {loading ? (editingId ? 'Salvando...' : 'Cadastrando...') : (editingId ? 'Salvar' : 'Cadastrar Aluno')}
-                </button>
-                <button
-                  type="button"
-                  onClick={printContract}
-                  className="w-full font-semibold rounded px-4 py-3"
-                  style={{ backgroundColor: '#2a2a40', color: '#1d8cf8', border: '1px solid #1d8cf8' }}
-                >
-                  Imprimir Contrato
-                </button>
-                <button
-                  type="button"
-                  onClick={printImageConsent}
-                  className="w-full font-semibold rounded px-4 py-3"
-                  style={{ backgroundColor: '#2a2a40', color: '#1d8cf8', border: '1px solid #1d8cf8' }}
-                >
-                  Imprimir Termo de Imagem
-                </button>
-              </div>
+                     <div className="grid sm:grid-cols-3 gap-2">
+                       <button
+                         type="submit"
+                         disabled={loading}
+                         className="w-full font-semibold rounded px-3 py-2"
+                         style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}
+                       >
+                         {loading ? (editingId ? 'Salvando...' : 'Cadastrando...') : (editingId ? 'Salvar' : 'Cadastrar Aluno')}
+                       </button>
+                       <button
+                         type="button"
+                         onClick={printContract}
+                         className="w-full font-semibold rounded px-3 py-2"
+                         style={{ backgroundColor: '#2a2a40', color: '#1d8cf8', border: '1px solid #1d8cf8' }}
+                       >
+                         Imprimir Contrato
+                       </button>
+                       <button
+                         type="button"
+                         onClick={printImageConsent}
+                         className="w-full font-semibold rounded px-3 py-2"
+                         style={{ backgroundColor: '#2a2a40', color: '#1d8cf8', border: '1px solid #1d8cf8' }}
+                       >
+                         Imprimir Termo de Imagem
+                       </button>
+                     </div>
             </form>
           </div>
         </div>

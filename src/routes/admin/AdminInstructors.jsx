@@ -196,16 +196,16 @@ const AdminInstructors = () => {
         </div>
       </div>
 
-      {showFormModal && (
-        <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowFormModal(false)} />
-          <div className="absolute inset-x-0 top-6 mx-auto max-w-3xl w-full rounded-lg p-6 space-y-6" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+             {showFormModal && (
+               <div className="fixed inset-0 z-50">
+                 <div className="absolute inset-0 bg-black/50" onClick={() => setShowFormModal(false)} />
+                 <div className="absolute inset-x-0 top-2 mx-auto max-w-3xl w-full rounded-lg p-4 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold" style={{ color: '#e6e6f0' }}>{editingId ? 'Editar Instrutor' : 'Novo Instrutor'}</h3>
               <button onClick={() => setShowFormModal(false)} className="px-3 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Fechar</button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex gap-2 flex-wrap" role="tablist" onKeyDown={(e) => {
                 const order = ['pessoais','endereco','disciplinas'];
                 const idx = order.indexOf(activeTab);
@@ -219,9 +219,9 @@ const AdminInstructors = () => {
                 <button type="button" role="tab" aria-selected={activeTab === 'disciplinas'} onClick={() => setActiveTab('disciplinas')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'disciplinas' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Disciplinas</button>
               </div>
 
-              {activeTab === 'pessoais' && (
-                <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                     {activeTab === 'pessoais' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <div className="grid sm:grid-cols-2 gap-3">
                     <div>
                       <label className="text-sm block mb-1">Nome completo</label>
                       <input name="nome" value={form.nome} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
@@ -238,10 +238,10 @@ const AdminInstructors = () => {
                 </div>
               )}
 
-              {activeTab === 'endereco' && (
-                <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-                  <h4 className="text-sm font-semibold mb-3">Endereço</h4>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {activeTab === 'endereco' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h4 className="text-sm font-semibold mb-3">Endereço</h4>
+                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <div>
                       <label className="text-sm block mb-1">CEP</label>
                       <input name="cep" value={form.cep} onChange={(e) => { handleChange(e); buscarCEP(e.target.value.replace(/\D/g, '')); }} placeholder="00000-000" maxLength={9} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
@@ -274,9 +274,9 @@ const AdminInstructors = () => {
                 </div>
               )}
 
-              {activeTab === 'disciplinas' && (
-                <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-                  <h4 className="text-sm font-semibold mb-3">Disciplinas</h4>
+                     {activeTab === 'disciplinas' && (
+                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                         <h4 className="text-sm font-semibold mb-3">Disciplinas</h4>
                   <div className="flex flex-wrap gap-2">
                     {allDisciplines.map((d) => (
                       <button key={d} type="button" onClick={() => toggleDisciplina(d)} className="px-3 py-1.5 rounded text-sm"

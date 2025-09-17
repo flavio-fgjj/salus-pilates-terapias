@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen, CreditCard, Smile, TrendingUp, DollarSign } from 'react-feather';
+import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen, CreditCard, Smile, TrendingUp, DollarSign, HelpCircle } from 'react-feather';
 import { useState } from 'react';
 import { useUserStore } from '../../store/useUserStore.js';
 
@@ -91,6 +91,19 @@ const AdminLayout = () => {
            >
              <TrendingUp size={18} /> Relatórios
            </Link>
+         )}
+
+         {user && (
+           <a
+             href="/GUIA_USUARIO.md"
+             target="_blank"
+             rel="noopener noreferrer"
+             className="flex items-center gap-2 px-3 py-2 rounded-md"
+             style={{ color: '#ffffff' }}
+             onClick={closeMobileMenu}
+           >
+             <HelpCircle size={18} /> Instruções de Uso
+           </a>
          )}
 
         {!user && (

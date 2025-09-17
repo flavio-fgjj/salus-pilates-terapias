@@ -339,7 +339,7 @@ const AdminPayments = () => {
       {showPaymentModal && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowPaymentModal(false)} />
-          <div className="absolute inset-x-0 top-6 mx-auto max-w-md w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+          <div className="absolute inset-x-0 top-2 mx-auto max-w-md w-full rounded-lg p-4 space-y-3" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-semibold flex items-center gap-2">
                 <DollarSign size={18} />
@@ -354,7 +354,7 @@ const AdminPayments = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-2">
               <div>
                 <label className="text-sm block mb-1">Aluno *</label>
                 <select
@@ -371,7 +371,7 @@ const AdminPayments = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-sm block mb-1">Valor (R$) *</label>
                   <input
@@ -400,7 +400,7 @@ const AdminPayments = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-sm block mb-1">Data do Pagamento *</label>
                   <input
@@ -448,7 +448,7 @@ const AdminPayments = () => {
                 <textarea
                   value={form.notes}
                   onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))}
-                  rows={3}
+                  rows={2}
                   placeholder="Ex: Aula de massagem, sessão de acupuntura, etc."
                   className="w-full rounded px-3 py-2"
                   style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
@@ -488,7 +488,7 @@ const AdminPayments = () => {
       {showHistoryModal && selectedStudent && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowHistoryModal(false)} />
-          <div className="absolute inset-x-0 top-6 mx-auto max-w-4xl w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+          <div className="absolute inset-x-0 top-2 mx-auto max-w-4xl w-full rounded-lg p-4 space-y-3" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-semibold flex items-center gap-2">
                 <DollarSign size={18} />
@@ -503,8 +503,8 @@ const AdminPayments = () => {
               </button>
             </div>
 
-            <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-              <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+            <div className="rounded-lg p-3" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+              <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
                 <div><strong>Disciplina:</strong> {selectedStudent.disciplina}</div>
                 <div><strong>Telefone:</strong> {selectedStudent.telefone}</div>
               </div>
@@ -556,7 +556,7 @@ const AdminPayments = () => {
                 </table>
               </div>
               
-              <div className="mt-4 pt-4 border-t" style={{ borderColor: '#1d8cf8' }}>
+              <div className="mt-3 pt-3 border-t" style={{ borderColor: '#1d8cf8' }}>
                 <div className="flex justify-between items-center">
                   <div className="text-sm" style={{ color: '#cdd4e2' }}>
                     Total de pagamentos: {getStudentPayments(selectedStudent.id).length}
