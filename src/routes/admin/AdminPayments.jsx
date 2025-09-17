@@ -10,6 +10,8 @@ const AdminPayments = () => {
   const [showInactive, setShowInactive] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [form, setForm] = useState({
     studentId: '',
     amount: '',
@@ -67,20 +69,26 @@ const AdminPayments = () => {
     const studentPayments = getStudentPayments(student.id);
     if (studentPayments.length === 0) return 'no_payments';
     
-    const latestPayment = studentPayments[0];
-    const today = new Date();
+    // Para aulas avulsas, verificar se há algum pagamento pendente ou em atraso
+    const hasOverdue = studentPayments.some(payment => {
+      if (payment.status === 'paid') return false;
+      
+      const today = new Date();
+      let dueDate;
+      if (payment.dueDate && typeof payment.dueDate.toDate === 'function') {
+        dueDate = payment.dueDate.toDate();
+      } else {
+        dueDate = new Date(payment.dueDate);
+      }
+      
+      return dueDate < today;
+    });
     
-    // Converter Timestamp do Firestore para Date
-    let dueDate;
-    if (latestPayment.dueDate && typeof latestPayment.dueDate.toDate === 'function') {
-      dueDate = latestPayment.dueDate.toDate();
-    } else {
-      dueDate = new Date(latestPayment.dueDate);
-    }
+    const hasPending = studentPayments.some(payment => payment.status === 'pending');
     
-    if (latestPayment.status === 'paid') return 'paid';
-    if (dueDate < today) return 'overdue';
-    return 'pending';
+    if (hasOverdue) return 'overdue';
+    if (hasPending) return 'pending';
+    return 'paid';
   };
 
   const formatCurrency = (value) => {
@@ -263,10 +271,20 @@ const AdminPayments = () => {
                     <td className="py-2">{student.nome}</td>
                     <td className="py-2">{student.disciplina}</td>
                     <td className="py-2">
-                      {latestPayment ? formatDate(latestPayment.paymentDate) : 'Nenhum'}
+                      {studentPayments.length > 0 ? (
+                        <div className="text-xs">
+                          <div>Último: {formatDate(latestPayment.paymentDate)}</div>
+                          <div className="opacity-75">Total: {studentPayments.length} pagamento(s)</div>
+                        </div>
+                      ) : 'Nenhum'}
                     </td>
                     <td className="py-2">
-                      {latestPayment ? formatCurrency(latestPayment.amount) : '—'}
+                      {studentPayments.length > 0 ? (
+                        <div className="text-xs">
+                          <div>Último: {formatCurrency(latestPayment.amount)}</div>
+                          <div className="opacity-75">Total: {formatCurrency(studentPayments.reduce((sum, p) => sum + (p.amount || 0), 0))}</div>
+                        </div>
+                      ) : '—'}
                     </td>
                     <td className="py-2">
                       <div className="flex items-center gap-2">
@@ -285,16 +303,28 @@ const AdminPayments = () => {
                         className="px-2 py-1 rounded border text-xs"
                         style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}
                       >
-                        Pagar
+                        Novo Pagamento
                       </button>
                       {studentPayments.length > 0 && (
-                        <button
-                          onClick={() => startEdit(latestPayment)}
-                          className="px-2 py-1 rounded border text-xs"
-                          style={{ borderColor: '#f59e0b', color: '#f59e0b' }}
-                        >
-                          Editar
-                        </button>
+                        <>
+                          <button
+                            onClick={() => startEdit(latestPayment)}
+                            className="px-2 py-1 rounded border text-xs"
+                            style={{ borderColor: '#f59e0b', color: '#f59e0b' }}
+                          >
+                            Editar Último
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedStudent(student);
+                              setShowHistoryModal(true);
+                            }}
+                            className="px-2 py-1 rounded border text-xs"
+                            style={{ borderColor: '#6b7280', color: '#6b7280' }}
+                          >
+                            Histórico
+                          </button>
+                        </>
                       )}
                     </td>
                   </tr>
@@ -392,6 +422,9 @@ const AdminPayments = () => {
                     className="w-full rounded px-3 py-2"
                     style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
                   />
+                  <div className="text-xs mt-1" style={{ color: '#cdd4e2' }}>
+                    Para aulas avulsas, use a data da aula
+                  </div>
                 </div>
               </div>
 
@@ -416,6 +449,7 @@ const AdminPayments = () => {
                   value={form.notes}
                   onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))}
                   rows={3}
+                  placeholder="Ex: Aula de massagem, sessão de acupuntura, etc."
                   className="w-full rounded px-3 py-2"
                   style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
                 />
@@ -446,6 +480,93 @@ const AdminPayments = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Histórico de Pagamentos */}
+      {showHistoryModal && selectedStudent && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowHistoryModal(false)} />
+          <div className="absolute inset-x-0 top-6 mx-auto max-w-4xl w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold flex items-center gap-2">
+                <DollarSign size={18} />
+                Histórico de Pagamentos - {selectedStudent.nome}
+              </h4>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="p-1 rounded border"
+                style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+              <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                <div><strong>Disciplina:</strong> {selectedStudent.disciplina}</div>
+                <div><strong>Telefone:</strong> {selectedStudent.telefone}</div>
+              </div>
+              
+              <div className="overflow-auto">
+                <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+                  <thead style={{ color: '#cdd4e2' }}>
+                    <tr>
+                      <th className="text-left py-2">Data Pagamento</th>
+                      <th className="text-left py-2">Data Vencimento</th>
+                      <th className="text-left py-2">Valor</th>
+                      <th className="text-left py-2">Status</th>
+                      <th className="text-left py-2">Forma Pagamento</th>
+                      <th className="text-left py-2">Observações</th>
+                      <th className="text-left py-2">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getStudentPayments(selectedStudent.id).map((payment) => (
+                      <tr key={payment.id} className="border-t" style={{ borderColor: '#1d8cf8' }}>
+                        <td className="py-2">{formatDate(payment.paymentDate)}</td>
+                        <td className="py-2">{formatDate(payment.dueDate)}</td>
+                        <td className="py-2 font-semibold">{formatCurrency(payment.amount)}</td>
+                        <td className="py-2">
+                          <div className="flex items-center gap-2">
+                            {getStatusIcon(payment.status)}
+                            <span style={{ color: getStatusColor(payment.status) }}>
+                              {paymentStatuses.find(s => s.value === payment.status)?.label}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-2">{payment.paymentMethod || '—'}</td>
+                        <td className="py-2">{payment.notes || '—'}</td>
+                        <td className="py-2">
+                          <button
+                            onClick={() => {
+                              startEdit(payment);
+                              setShowHistoryModal(false);
+                            }}
+                            className="px-2 py-1 rounded border text-xs"
+                            style={{ borderColor: '#f59e0b', color: '#f59e0b' }}
+                          >
+                            Editar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              <div className="mt-4 pt-4 border-t" style={{ borderColor: '#1d8cf8' }}>
+                <div className="flex justify-between items-center">
+                  <div className="text-sm" style={{ color: '#cdd4e2' }}>
+                    Total de pagamentos: {getStudentPayments(selectedStudent.id).length}
+                  </div>
+                  <div className="text-lg font-semibold text-green-400">
+                    Total: {formatCurrency(getStudentPayments(selectedStudent.id).reduce((sum, p) => sum + (p.amount || 0), 0))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
