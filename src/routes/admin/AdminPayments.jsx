@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../firebase.js';
 import { CreditCard, Calendar, AlertCircle, CheckCircle, DollarSign } from 'react-feather';
+import colors from '../../theme/colors.js';
 
 const AdminPayments = () => {
   const [students, setStudents] = useState([]);
@@ -221,14 +222,14 @@ const AdminPayments = () => {
       </div>
 
       {/* Filtros */}
-      <div className="rounded-lg p-4 space-y-3" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+      <div className="rounded-lg p-4 space-y-3" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           <input
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             placeholder="Buscar por nome, email ou telefone"
             className="flex-1 rounded px-3 py-2"
-            style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+            style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
           />
           <label className="flex items-center gap-2 text-sm" style={{ color: '#cdd4e2' }}>
             <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
@@ -238,7 +239,7 @@ const AdminPayments = () => {
             type="button"
             onClick={() => newPayment()}
             className="px-3 py-2 rounded font-semibold"
-            style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}
+            style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}
           >
             Novo Pagamento
           </button>
@@ -246,10 +247,10 @@ const AdminPayments = () => {
       </div>
 
       {/* Lista de Alunos com Status de Pagamento */}
-      <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+      <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
         <h3 className="text-lg font-semibold mb-4">Status de Pagamentos</h3>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Aluno</th>
@@ -267,7 +268,7 @@ const AdminPayments = () => {
                 const status = getPaymentStatus(student);
                 
                 return (
-                  <tr key={student.id} className="border-t" style={{ borderColor: '#1d8cf8' }}>
+                  <tr key={student.id} className="border-t" style={{ borderColor: colors.border }}>
                     <td className="py-2">{student.nome}</td>
                     <td className="py-2">{student.disciplina}</td>
                     <td className="py-2">
@@ -301,7 +302,7 @@ const AdminPayments = () => {
                       <button
                         onClick={() => newPayment(student.id)}
                         className="px-2 py-1 rounded border text-xs"
-                        style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}
+                        style={{ borderColor: colors.border, color: colors.buttonInactiveText }}
                       >
                         Novo Pagamento
                       </button>

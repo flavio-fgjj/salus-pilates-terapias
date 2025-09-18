@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase.js';
-import { Users, MapPin, Calendar, CreditCard } from 'react-feather';
+import { Users, MapPin, CreditCard } from 'react-feather';
+import colors from '../../theme/colors.js';
 
 const disciplines = [
   { value: 'auriculoterapia', label: 'Auriculoterapia' },
@@ -460,25 +461,25 @@ const AdminStudents = () => {
       </div>
 
       {/* Listagem e Busca */}
-      <div className="rounded-lg p-4 space-y-3" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+      <div className="rounded-lg p-4 space-y-3" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           <input
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             placeholder="Buscar por nome, email, telefone, disciplina"
             className="flex-1 rounded px-3 py-2"
-            style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+            style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
           />
           <label className="flex items-center gap-2 text-sm" style={{ color: '#cdd4e2' }}>
             <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
             Mostrar inativos
           </label>
-          <button type="button" onClick={newStudent} className="px-3 py-2 rounded font-semibold" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>
+          <button type="button" onClick={newStudent} className="px-3 py-2 rounded font-semibold" style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}>
             Novo
           </button>
         </div>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Nome</th>
@@ -491,14 +492,14 @@ const AdminStudents = () => {
             </thead>
             <tbody>
               {filtered.map((s) => (
-                <tr key={s.id} className="border-t" style={{ borderColor: '#1d8cf8' }}>
+                <tr key={s.id} className="border-t" style={{ borderColor: colors.border }}>
                   <td className="py-2">{s.nome}</td>
                   <td className="py-2">{s.email}</td>
                   <td className="py-2">{s.telefone}</td>
                   <td className="py-2">{s.disciplina}</td>
                   <td className="py-2">{s.active === false ? 'Inativo' : 'Ativo'}</td>
                   <td className="py-2 flex gap-2">
-                    <button onClick={() => startEdit(s)} className="px-2 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Editar</button>
+                    <button onClick={() => startEdit(s)} className="px-2 py-1 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>Editar</button>
                     {s.active === false ? (
                       <button onClick={() => restore(s)} className="px-2 py-1 rounded border" style={{ borderColor: '#22c55e', color: '#22c55e' }}>Restaurar</button>
                     ) : (

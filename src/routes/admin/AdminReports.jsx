@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../../firebase.js';
 import { TrendingUp, AlertCircle, CheckCircle, Users, DollarSign, Calendar, BarChart } from 'react-feather';
+import colors from '../../theme/colors.js';
 
 const AdminReports = () => {
   const [students, setStudents] = useState([]);
@@ -169,7 +170,7 @@ const AdminReports = () => {
 
       {/* Filtros */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+        <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
           <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
             <Calendar size={18} />
             Período de Cadastro
@@ -182,7 +183,7 @@ const AdminReports = () => {
                 value={dateRange.start}
                 onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
                 className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
               />
             </div>
             <div>
@@ -192,18 +193,18 @@ const AdminReports = () => {
                 value={dateRange.end}
                 onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
                 className="w-full rounded px-3 py-2"
-                style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+                style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
               />
             </div>
           </div>
           {dateRange.start && dateRange.end && (
-            <div className="mt-3 text-sm" style={{ color: '#cdd4e2' }}>
+            <div className="mt-3 text-sm" style={{ color: colors.mutedText }}>
               {studentsInPeriod.length} aluno(s) cadastrado(s) no período
             </div>
           )}
         </div>
 
-        <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+        <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
           <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
             <DollarSign size={18} />
             Fechamento Mensal
@@ -215,10 +216,10 @@ const AdminReports = () => {
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
               className="w-full rounded px-3 py-2"
-              style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+              style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
             />
           </div>
-          <div className="mt-3 text-sm" style={{ color: '#cdd4e2' }}>
+          <div className="mt-3 text-sm" style={{ color: colors.mutedText }}>
             Total: <span className="font-semibold text-green-400">{formatCurrency(monthlyTotal)}</span>
           </div>
         </div>
@@ -226,7 +227,7 @@ const AdminReports = () => {
 
       {/* Cards de Resumo */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #ef4444' }}>
+      <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: '1px solid #ef4444' }}>
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle size={20} className="text-red-500" />
             <h3 className="font-semibold">Inadimplentes</h3>
@@ -260,13 +261,13 @@ const AdminReports = () => {
       </div>
 
       {/* Lista de Alunos Inadimplentes */}
-      <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #ef4444' }}>
+      <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: '1px solid #ef4444' }}>
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <AlertCircle size={18} className="text-red-500" />
           Alunos Inadimplentes ({overdueStudents.length})
         </h3>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Nome</th>
@@ -297,13 +298,13 @@ const AdminReports = () => {
       </div>
 
       {/* Lista de Alunos Ativos */}
-      <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #22c55e' }}>
+      <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: '1px solid #22c55e' }}>
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <CheckCircle size={18} className="text-green-500" />
           Alunos Ativos ({activeStudents.length})
         </h3>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Nome</th>
@@ -334,13 +335,13 @@ const AdminReports = () => {
       </div>
 
       {/* Lista de Alunos Inativos */}
-      <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #6b7280' }}>
+      <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: '1px solid #6b7280' }}>
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <Users size={18} className="text-gray-400" />
           Alunos Inativos ({inactiveStudents.length})
         </h3>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Nome</th>
@@ -402,7 +403,7 @@ const AdminReports = () => {
           Fechamento por Disciplina - {new Date(selectedMonth + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
         </h3>
         <div className="overflow-auto">
-          <table className="w-full text-sm" style={{ color: '#e6e6f0' }}>
+          <table className="w-full text-sm" style={{ color: colors.text }}>
             <thead style={{ color: '#cdd4e2' }}>
               <tr>
                 <th className="text-left py-2">Disciplina</th>

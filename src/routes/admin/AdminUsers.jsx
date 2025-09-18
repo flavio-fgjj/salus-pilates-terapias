@@ -3,6 +3,7 @@ import { db, getSecondaryAuth } from '../../firebase.js';
 import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { Users, Shield, UserX } from 'react-feather';
+import colors from '../../theme/colors.js';
 
 const roles = [
   { value: 'admin', label: 'Admin' },
@@ -66,23 +67,23 @@ const AdminUsers = () => {
         <h2 className="text-xl font-bold">Usuários</h2>
       </div>
 
-      <form onSubmit={createUser} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4 rounded" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
-        <input name="nome" value={form.nome} onChange={handleChange} placeholder="Nome" className="rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-        <input name="cpf" value={form.cpf} onChange={handleChange} placeholder="CPF" className="rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-        <input name="email" value={form.email} onChange={handleChange} placeholder="Email" type="email" className="rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-        <input name="telefone" value={form.telefone} onChange={handleChange} placeholder="Telefone" className="rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-        <select name="perfil" value={form.perfil} onChange={handleChange} className="rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
+      <form onSubmit={createUser} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4 rounded" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
+        <input name="nome" value={form.nome} onChange={handleChange} placeholder="Nome" className="rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
+        <input name="cpf" value={form.cpf} onChange={handleChange} placeholder="CPF" className="rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
+        <input name="email" value={form.email} onChange={handleChange} placeholder="Email" type="email" className="rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
+        <input name="telefone" value={form.telefone} onChange={handleChange} placeholder="Telefone" className="rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
+        <select name="perfil" value={form.perfil} onChange={handleChange} className="rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}>
           {roles.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
         </select>
-        <button disabled={saving} className="rounded px-3 py-2 font-semibold" style={{ backgroundColor: '#1d8cf8', border: '1px solid #1d8cf8', color: '#fff' }}>Cadastrar</button>
+        <button disabled={saving} className="rounded px-3 py-2 font-semibold" style={{ backgroundColor: colors.buttonActiveBg, border: `1px solid ${colors.border}`, color: colors.buttonActiveText }}>Cadastrar</button>
       </form>
 
-      <div className="rounded p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+      <div className="rounded p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
         {loading ? (
           <div>Carregando...</div>
         ) : (
           <div className="overflow-auto">
-            <table className="w-full text-left text-sm" style={{ color: '#e6e6f0' }}>
+            <table className="w-full text-left text-sm" style={{ color: colors.text }}>
               <thead>
                 <tr style={{ color: '#cdd4e2' }}>
                   <th className="py-2">Nome</th>
@@ -96,7 +97,7 @@ const AdminUsers = () => {
               </thead>
               <tbody>
                 {list.map(u => (
-                  <tr key={u.id} className="border-t" style={{ borderColor: '#1d8cf8' }}>
+                  <tr key={u.id} className="border-t" style={{ borderColor: colors.border }}>
                     <td className="py-2">{u.nome}</td>
                     <td className="py-2">{u.cpf}</td>
                     <td className="py-2">{u.email}</td>
@@ -104,9 +105,9 @@ const AdminUsers = () => {
                     <td className="py-2">{u.role}</td>
                     <td className="py-2">{u.active ? 'Ativo' : 'Inativo'}</td>
                     <td className="py-2 flex gap-2">
-                      <button onClick={() => toggleActive(u)} className="px-3 py-1 rounded" style={{ backgroundColor: u.active ? '#ff6b6b' : '#1d8cf8', color: '#fff' }}>{u.active ? 'Revogar' : 'Ativar'}</button>
+                      <button onClick={() => toggleActive(u)} className="px-3 py-1 rounded" style={{ backgroundColor: u.active ? '#ff6b6b' : colors.buttonActiveBg, color: colors.buttonActiveText }}>{u.active ? 'Revogar' : 'Ativar'}</button>
                       {u.role !== 'admin' && (
-                        <button onClick={() => makeAdmin(u)} className="px-3 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>
+                        <button onClick={() => makeAdmin(u)} className="px-3 py-1 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>
                           <Shield size={14} className="inline-block mr-1" /> Tornar admin
                         </button>
                       )}

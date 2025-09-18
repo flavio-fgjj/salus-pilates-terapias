@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Calendar, Users, UserCheck, BookOpen, BarChart, Plus, X } from 'react-feather';
 import { useUserStore } from '../../store/useUserStore.js';
+import colors from '../../theme/colors.js';
 import { db } from '../../firebase.js';
 import { collection, addDoc, onSnapshot, query, where, doc } from 'firebase/firestore';
 
@@ -141,13 +142,13 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-[#1d8cf8] to-[#1b7edc] rounded-lg p-6 text-white">
+      <div className="bg-gradient-to-r from-[#00A36C] to-[#50C878] rounded-lg p-6 text-white">
         <h2 className="text-3xl font-bold mb-2">Dashboard</h2>
         <p className="text-lg opacity-90">
           Bem-vindo, <span className="font-semibold">{storeEmail || user?.email || 'usuário'}</span>
         </p>
         <div className="mt-4">
-          <button onClick={() => setShowAddModal(true)} className="inline-flex items-center gap-2 px-3 py-2 rounded" style={{ backgroundColor: '#0b5eb8', color: '#fff' }}>
+          <button onClick={() => setShowAddModal(true)} className="inline-flex items-center gap-2 px-3 py-2 rounded" style={{ backgroundColor: colors.tertiary, color: colors.text }}>
             <Plus size={16} /> Nova agenda
           </button>
         </div>
@@ -178,7 +179,7 @@ const AdminDashboard = () => {
         ))}
       </div> */}
 
-      <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
+      <div className="rounded-lg p-6" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}`, color: colors.text }}>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar size={18} /> {showAllSchedules ? 'Todas as agendas' : 'Agenda de hoje'}</h3>
           <label className="text-sm flex items-center gap-2" style={{ color: '#cdd4e2' }}>
@@ -190,7 +191,7 @@ const AdminDashboard = () => {
         ) : (
           <div className="space-y-2">
             {displayedItems.map(item => (
-              <button key={item.id} onClick={() => setShowDetails(item)} className="w-full text-left rounded px-3 py-2 hover:opacity-90" style={{ backgroundColor: '#1e2436', border: '1px solid #1d8cf8' }}>
+              <button key={item.id} onClick={() => setShowDetails(item)} className="w-full text-left rounded px-3 py-2 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-semibold">{item.startTime} - {item.endTime} • {item.discipline || 'Atividade'}</div>
@@ -206,7 +207,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Semana atual */}
-      <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
+      <div className="rounded-lg p-6" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}`, color: colors.text }}>
         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><Calendar size={18} /> Semana atual</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
           {weekDates.map((d) => {
@@ -223,14 +224,14 @@ const AdminDashboard = () => {
             const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
             const studMap = Object.fromEntries(students.map(s => [s.id, s]));
             return (
-              <div key={dateISO} className="rounded border p-3" style={{ borderColor: '#1d8cf8' }}>
+              <div key={dateISO} className="rounded border p-3" style={{ borderColor: colors.border }}>
                 <div className="font-semibold mb-2">{d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })}</div>
                 {items.length === 0 ? (
                   <div className="text-sm" style={{ color: '#cdd4e2' }}>Sem horários</div>
                 ) : (
                   <div className="space-y-2">
                     {items.map((s) => (
-                      <button key={`${s.id}-${dateISO}`} onClick={() => setShowDetails({ ...s, instructor: instMap[s.instructorId] || null, students: (s.studentIds || []).map(id => studMap[id]).filter(Boolean) })} className="w-full text-left rounded px-2 py-1 hover:opacity-90" style={{ backgroundColor: '#1e2436', border: '1px solid #1d8cf8' }}>
+                      <button key={`${s.id}-${dateISO}`} onClick={() => setShowDetails({ ...s, instructor: instMap[s.instructorId] || null, students: (s.studentIds || []).map(id => studMap[id]).filter(Boolean) })} className="w-full text-left rounded px-2 py-1 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
                         <div className="text-sm font-semibold">{s.startTime} - {s.endTime}</div>
                         <div className="text-xs" style={{ color: '#cdd4e2' }}>{s.discipline || 'Atividade'}</div>
                       </button>
@@ -249,7 +250,7 @@ const AdminDashboard = () => {
           <div className="absolute inset-x-0 top-8 mx-auto max-w-xl w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-semibold">Nova agenda recorrente</h4>
-              <button onClick={() => setShowAddModal(false)} className="p-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}><X size={16} /></button>
+              <button onClick={() => setShowAddModal(false)} className="p-1 rounded border" style={{ borderColor: colors.secondary, color: colors.text }}><X size={16} /></button>
             </div>
             <form onSubmit={saveSchedule} className="space-y-3">
               <div className="grid sm:grid-cols-2 gap-3">
