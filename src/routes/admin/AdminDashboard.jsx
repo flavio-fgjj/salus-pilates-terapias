@@ -326,7 +326,7 @@ const AdminDashboard = () => {
               <button onClick={() => setShowDetails(null)} className="p-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}><X size={16} /></button>
             </div>
             <div><strong>Instrutor:</strong> {showDetails.instructor?.nome || '—'}</div>
-            <div><strong>Aluno:</strong> {showDetails.student?.nome || '—'}</div>
+            <div><strong>Alunos/Pacientes:</strong> {(showDetails.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}</div>
             <div><strong>Disciplina:</strong> {showDetails.discipline || '—'}</div>
             <div><strong>Horário:</strong> {showDetails.startTime} - {showDetails.endTime}</div>
             <div><strong>Dias:</strong> {Array.isArray(showDetails.days) ? showDetails.days.map(d => daysOfWeek[d]?.label).join(', ') : '—'}</div>
