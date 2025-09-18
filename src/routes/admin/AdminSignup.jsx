@@ -1,3 +1,4 @@
+import colors from '../../theme/colors.js';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -66,39 +67,39 @@ const AdminSignup = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: '#2a2a40', color: '#e6e6f0' }}>
+    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: colors.panel, color: colors.text }}>
       <h2 className="text-xl font-bold mb-2">Criar usuário</h2>
-      <p className="text-sm mb-4" style={{ color: '#cdd4e2' }}>Cadastro para acesso administrativo</p>
+      <p className="text-sm mb-4" style={{ color: colors.mutedText }}>Cadastro para acesso administrativo</p>
       {error && <div className="text-sm mb-3" style={{ color: '#ff6b6b' }}>{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
           <label className="text-sm">Nome completo *</label>
-          <input value={nome} onChange={(e) => setNome(e.target.value)} type="text" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={nome} onChange={(e) => setNome(e.target.value)} type="text" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">CPF *</label>
-          <input value={cpf} onChange={(e) => setCpf(formatCPF(e.target.value))} type="text" placeholder="000.000.000-00" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={cpf} onChange={(e) => setCpf(formatCPF(e.target.value))} type="text" placeholder="000.000.000-00" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">Telefone *</label>
-          <input value={telefone} onChange={(e) => setTelefone(formatPhone(e.target.value))} type="text" placeholder="(11) 99999-9999" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={telefone} onChange={(e) => setTelefone(formatPhone(e.target.value))} type="text" placeholder="(11) 99999-9999" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">Email *</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">Senha *</label>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">Confirmar senha *</label>
-          <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={confirm} onChange={(e) => setConfirm(e.target.value)} type="password" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
-        <button type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>Criar</button>
+        <button type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}>Criar</button>
       </form>
       <div className="text-sm mt-3">
-        Já tem conta? <Link to="/admin/login" className="underline" style={{ color: '#1d8cf8' }}>Entrar</Link>
+        Já tem conta? <Link to="/admin/login" className="underline" style={{ color: colors.primary }}>Entrar</Link>
       </div>
     </div>
   );

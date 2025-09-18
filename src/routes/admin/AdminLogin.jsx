@@ -1,3 +1,4 @@
+import colors from '../../theme/colors.js';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
@@ -45,14 +46,14 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: '#2a2a40', color: '#e6e6f0' }}>
+    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: colors.panel, color: colors.text }}>
       <h2 className="text-xl font-bold mb-2">Login</h2>
-      <p className="text-sm mb-4" style={{ color: '#cdd4e2' }}>Acesso à área administrativa</p>
+      <p className="text-sm mb-4" style={{ color: colors.mutedText }}>Acesso à área administrativa</p>
       {error && <div className="text-sm mb-3" style={{ color: '#ff6b6b' }}>{error}</div>}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
           <label className="text-sm">Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
         </div>
         <div>
           <label className="text-sm">Senha</label>
@@ -62,7 +63,7 @@ const AdminLogin = () => {
               onChange={(e) => setPassword(e.target.value)}
               type={showPassword ? 'text' : 'password'}
               className="w-full rounded px-3 py-2 pr-10"
-              style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}
+              style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
             />
             <div
               onClick={() => setShowPassword((v) => !v)}
@@ -76,21 +77,22 @@ const AdminLogin = () => {
             </div>
           </div>
         </div>
-        <label className="flex items-center gap-2 text-sm" style={{ color: '#cdd4e2' }}>
+        <label className="flex items-center gap-2 text-sm" style={{ color: colors.mutedText }}>
           <input
             type="checkbox"
             checked={staySignedIn}
             onChange={(e) => setStaySignedIn(e.target.checked)}
+            style={{ accentColor: colors.primary }}
           />
           Mantenha-me conectado
         </label>
-        <button type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>Entrar</button>
+        <button type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}>Entrar</button>
         <div className="text-sm text-right">
-          <Link to="/admin/forgot" className="underline" style={{ color: '#1d8cf8' }}>Esqueci minha senha</Link>
+          <Link to="/admin/forgot" className="underline" style={{ color: colors.primary }}>Esqueci minha senha</Link>
         </div>
       </form>
       <div className="text-sm mt-3">
-        Não tem conta? <Link to="/admin/signup" className="underline" style={{ color: '#1d8cf8' }}>Criar usuário</Link>
+        Não tem conta? <Link to="/admin/signup" className="underline" style={{ color: colors.primary }}>Criar usuário</Link>
       </div>
     </div>
   );

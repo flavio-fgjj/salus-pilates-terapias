@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../firebase.js';
+import colors from '../../theme/colors.js';
 
 const AdminForgot = () => {
   const [email, setEmail] = useState('');
@@ -21,9 +22,9 @@ const AdminForgot = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: '#2a2a40', color: '#e6e6f0' }}>
+    <div className="max-w-sm mx-auto rounded-lg p-6 shadow-sm" style={{ backgroundColor: colors.panel, color: colors.text }}>
       <h2 className="text-xl font-bold mb-2">Recuperar senha</h2>
-      <p className="text-sm mb-4" style={{ color: '#cdd4e2' }}>
+      <p className="text-sm mb-4" style={{ color: colors.mutedText }}>
         Informe seu email e enviaremos um link para redefinir a senha.
       </p>
       {status === 'sent' ? (
@@ -35,10 +36,10 @@ const AdminForgot = () => {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="text-sm">Email</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
           </div>
           {error && <div className="text-sm" style={{ color: '#ff6b6b' }}>{error}</div>}
-          <button disabled={status === 'sending'} type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>
+          <button disabled={status === 'sending'} type="submit" className="w-full font-semibold rounded px-3 py-2" style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}>
             {status === 'sending' ? 'Enviando…' : 'Enviar link'}
           </button>
         </form>
