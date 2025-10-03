@@ -41,6 +41,7 @@ const AdminDashboard = () => {
   const [showAllSchedules, setShowAllSchedules] = useState(false);
   const [studentSearch, setStudentSearch] = useState('');
   const [activeTab, setActiveTab] = useState('instructor');
+  const [viewMode, setViewMode] = useState('day'); // 'day', 'week', 'month'
 
   useEffect(() => {
     const unsubI = onSnapshot(query(collection(db, 'instructors'), where('active', 'in', [true, null])), (snap) => {
@@ -91,6 +92,41 @@ const AdminDashboard = () => {
   };
 
   const weekDates = getWeekDates(today);
+
+  // Função para obter as datas do mês atual
+  const getMonthDates = (baseDate) => {
+    const d = new Date(baseDate);
+    const year = d.getFullYear();
+    const month = d.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days = [];
+    
+    // Adicionar dias do mês anterior para completar a primeira semana
+    const firstWeekday = firstDay.getDay();
+    for (let i = firstWeekday - 1; i >= 0; i--) {
+      const day = new Date(firstDay);
+      day.setDate(day.getDate() - (i + 1));
+      days.push({ date: day, isCurrentMonth: false });
+    }
+    
+    // Adicionar todos os dias do mês atual
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const date = new Date(year, month, day);
+      days.push({ date, isCurrentMonth: true });
+    }
+    
+    // Adicionar dias do próximo mês para completar a última semana
+    const lastWeekday = lastDay.getDay();
+    for (let day = 1; day <= (6 - lastWeekday); day++) {
+      const date = new Date(year, month + 1, day);
+      days.push({ date, isCurrentMonth: false });
+    }
+    
+    return days;
+  };
+
+  const monthDates = getMonthDates(today);
 
   const todaysItems = useMemo(() => {
     const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
@@ -218,68 +254,175 @@ const AdminDashboard = () => {
 
       <div className="rounded-lg p-6" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}`, color: colors.text }}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar size={18} /> {showAllSchedules ? 'Todas as agendas' : 'Agenda de hoje'}</h3>
-          <label className="text-sm flex items-center gap-2" style={{ color: '#cdd4e2' }}>
-            <input type="checkbox" checked={showAllSchedules} onChange={(e) => setShowAllSchedules(e.target.checked)} /> Mostrar todas
-          </label>
+          <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar size={18} /> Agenda</h3>
+          <div className="flex items-center gap-4">
+            <div className="flex gap-1" role="tablist">
+              <button 
+                onClick={() => setViewMode('day')} 
+                className={`px-3 py-1.5 rounded text-sm ${viewMode === 'day' ? 'text-white' : ''}`}
+                style={viewMode === 'day' 
+                  ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                  : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                }
+              >
+                Dia
+              </button>
+              <button 
+                onClick={() => setViewMode('week')} 
+                className={`px-3 py-1.5 rounded text-sm ${viewMode === 'week' ? 'text-white' : ''}`}
+                style={viewMode === 'week' 
+                  ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                  : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                }
+              >
+                Semana
+              </button>
+              <button 
+                onClick={() => setViewMode('month')} 
+                className={`px-3 py-1.5 rounded text-sm ${viewMode === 'month' ? 'text-white' : ''}`}
+                style={viewMode === 'month' 
+                  ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                  : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                }
+              >
+                Mês
+              </button>
+            </div>
+            {viewMode === 'day' && (
+              <label className="text-sm flex items-center gap-2" style={{ color: colors.mutedText }}>
+                <input type="checkbox" checked={showAllSchedules} onChange={(e) => setShowAllSchedules(e.target.checked)} /> Mostrar todas
+              </label>
+            )}
+          </div>
         </div>
-        {displayedItems.length === 0 ? (
-          <div className="text-sm" style={{ color: '#cdd4e2' }}>Sem horários registrados para hoje.</div>
-        ) : (
-          <div className="space-y-2">
-            {displayedItems.map(item => (
-              <button key={item.id} onClick={() => setShowDetails(item)} className="w-full text-left rounded px-3 py-2 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold">{item.startTime} - {item.endTime} • {item.discipline || 'Atividade'}</div>
-                    <div className="text-sm" style={{ color: '#cdd4e2' }}>
-                      Instrutor: {item.instructor?.nome || '—'} • Alunos/Pacientes: {(item.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}
+        {/* Visualização por Dia */}
+        {viewMode === 'day' && (
+          <>
+            {displayedItems.length === 0 ? (
+              <div className="text-sm" style={{ color: colors.mutedText }}>Sem horários registrados para hoje.</div>
+            ) : (
+              <div className="space-y-2">
+                {displayedItems.map(item => (
+                  <button key={item.id} onClick={() => setShowDetails(item)} className="w-full text-left rounded px-3 py-2 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{item.startTime} - {item.endTime} • {item.discipline || 'Atividade'}</div>
+                        <div className="text-sm" style={{ color: colors.mutedText }}>
+                          Instrutor: {item.instructor?.nome || '—'} • Alunos/Pacientes: {(item.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Visualização por Semana */}
+        {viewMode === 'week' && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+            {weekDates.map((d) => {
+              const dow = d.getDay();
+              const dateISO = d.toISOString().slice(0,10);
+              const items = schedules
+                .filter(s => s.active !== false && Array.isArray(s.days) && s.days.includes(dow))
+                .filter(s => {
+                  const startOK = !s.startDate || new Date(dateISO) >= new Date(s.startDate);
+                  const endOK = !s.endDate || new Date(dateISO) <= new Date(s.endDate);
+                  return startOK && endOK;
+                })
+                .sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+              const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
+              const studMap = Object.fromEntries(students.map(s => [s.id, s]));
+              return (
+                <div key={dateISO} className="rounded border p-3" style={{ borderColor: colors.border }}>
+                  <div className="font-semibold mb-2">{d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })}</div>
+                  {items.length === 0 ? (
+                    <div className="text-sm" style={{ color: colors.mutedText }}>Sem horários</div>
+                  ) : (
+                    <div className="space-y-2">
+                      {items.map((s) => (
+                        <button key={`${s.id}-${dateISO}`} onClick={() => setShowDetails({ ...s, instructor: instMap[s.instructorId] || null, students: (s.studentIds || []).map(id => studMap[id]).filter(Boolean) })} className="w-full text-left rounded px-2 py-1 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
+                          <div className="text-sm font-semibold">{s.startTime} - {s.endTime}</div>
+                          <div className="text-xs" style={{ color: colors.mutedText }}>{s.discipline || 'Atividade'}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Visualização por Mês */}
+        {viewMode === 'month' && (
+          <div className="space-y-4">
+            <div className="text-center font-semibold text-lg">
+              {today.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase()}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {/* Cabeçalho dos dias da semana */}
+              {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                <div key={day} className="text-center text-sm font-semibold py-2" style={{ color: colors.mutedText }}>
+                  {day}
+                </div>
+              ))}
+              {/* Dias do mês */}
+              {monthDates.map(({ date, isCurrentMonth }, index) => {
+                const dow = date.getDay();
+                const dateISO = date.toISOString().slice(0,10);
+                const items = schedules
+                  .filter(s => s.active !== false && Array.isArray(s.days) && s.days.includes(dow))
+                  .filter(s => {
+                    const startOK = !s.startDate || new Date(dateISO) >= new Date(s.startDate);
+                    const endOK = !s.endDate || new Date(dateISO) <= new Date(s.endDate);
+                    return startOK && endOK;
+                  })
+                  .sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+                
+                const isToday = dateISO === today.toISOString().slice(0,10);
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={`min-h-[80px] p-1 border rounded ${isToday ? 'ring-2' : ''}`} 
+                    style={{ 
+                      borderColor: colors.border,
+                      backgroundColor: isCurrentMonth ? colors.panelAlt : colors.secondary,
+                      opacity: isCurrentMonth ? 1 : 0.6,
+                      ringColor: isToday ? colors.buttonActiveBg : 'transparent'
+                    }}
+                  >
+                    <div className={`text-xs font-semibold mb-1 ${isToday ? 'text-white' : ''}`} style={{ color: isToday ? colors.buttonActiveText : colors.text }}>
+                      {date.getDate()}
+                    </div>
+                    <div className="space-y-1">
+                      {items.slice(0, 3).map((s) => (
+                        <div 
+                          key={`${s.id}-${dateISO}`} 
+                          className="text-xs p-1 rounded cursor-pointer hover:opacity-80" 
+                          style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText }}
+                          onClick={() => setShowDetails({ ...s, instructor: instructors.find(i => i.id === s.instructorId) || null, students: (s.studentIds || []).map(id => students.find(st => st.id === id)).filter(Boolean) })}
+                        >
+                          {s.startTime}
+                        </div>
+                      ))}
+                      {items.length > 3 && (
+                        <div className="text-xs" style={{ color: colors.mutedText }}>
+                          +{items.length - 3} mais
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
 
-      {/* Semana atual */}
-      <div className="rounded-lg p-6" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}`, color: colors.text }}>
-        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><Calendar size={18} /> Semana atual</h3>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-          {weekDates.map((d) => {
-            const dow = d.getDay();
-            const dateISO = d.toISOString().slice(0,10);
-            const items = schedules
-              .filter(s => s.active !== false && Array.isArray(s.days) && s.days.includes(dow))
-              .filter(s => {
-                const startOK = !s.startDate || new Date(dateISO) >= new Date(s.startDate);
-                const endOK = !s.endDate || new Date(dateISO) <= new Date(s.endDate);
-                return startOK && endOK;
-              })
-              .sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
-            const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
-            const studMap = Object.fromEntries(students.map(s => [s.id, s]));
-            return (
-              <div key={dateISO} className="rounded border p-3" style={{ borderColor: colors.border }}>
-                <div className="font-semibold mb-2">{d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })}</div>
-                {items.length === 0 ? (
-                  <div className="text-sm" style={{ color: '#cdd4e2' }}>Sem horários</div>
-                ) : (
-                  <div className="space-y-2">
-                    {items.map((s) => (
-                      <button key={`${s.id}-${dateISO}`} onClick={() => setShowDetails({ ...s, instructor: instMap[s.instructorId] || null, students: (s.studentIds || []).map(id => studMap[id]).filter(Boolean) })} className="w-full text-left rounded px-2 py-1 hover:opacity-90" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
-                        <div className="text-sm font-semibold">{s.startTime} - {s.endTime}</div>
-                        <div className="text-xs" style={{ color: '#cdd4e2' }}>{s.discipline || 'Atividade'}</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       {showAddModal && (
         <div className="fixed inset-0 z-50">
