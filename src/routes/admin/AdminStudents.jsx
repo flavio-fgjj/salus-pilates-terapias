@@ -3,21 +3,7 @@ import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from '
 import { db } from '../../firebase.js';
 import { Users, MapPin, CreditCard } from 'react-feather';
 import colors from '../../theme/colors.js';
-
-const disciplines = [
-  { value: 'auriculoterapia', label: 'Auriculoterapia' },
-  { value: 'pilates', label: 'Pilates' },
-  { value: 'ballet', label: 'Ballet Infantil' },
-  { value: 'jiu-jitsu', label: 'Jiu-Jitsu' },
-  { value: 'acupuntura', label: 'Acupuntura' },
-  { value: 'massagem', label: 'Massagem' },
-  { value: 'quiropraxia', label: 'Quiropraxia' },
-  { value: 'reiki', label: 'Reiki' },
-  { value: 'radiestesia', label: 'Radiestesia' },
-  { value: 'cone hindu / chines', label: 'Cone Hindu / Chines' },
-  { value: 'yoga', label: 'Yoga' },
-
-];
+import { disciplines } from '../../data/disciplines.js';
 
 const frequencias = [
   { value: '1x', label: '1x por semana' },

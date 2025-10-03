@@ -6,6 +6,7 @@ import { useUserStore } from '../../store/useUserStore.js';
 import colors from '../../theme/colors.js';
 import { db } from '../../firebase.js';
 import { collection, addDoc, onSnapshot, query, where, doc } from 'firebase/firestore';
+import { disciplines } from '../../data/disciplines.js';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -38,6 +39,8 @@ const AdminDashboard = () => {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ instructorId: '', studentIds: [], discipline: '', days: [], startTime: '10:00', endTime: '11:00', startDate: '', endDate: '' });
   const [showAllSchedules, setShowAllSchedules] = useState(false);
+  const [studentSearch, setStudentSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('instructor');
 
   useEffect(() => {
     const unsubI = onSnapshot(query(collection(db, 'instructors'), where('active', 'in', [true, null])), (snap) => {
@@ -113,8 +116,40 @@ const AdminDashboard = () => {
     setForm(prev => ({ ...prev, days: prev.days.includes(id) ? prev.days.filter(d => d !== id) : [...prev.days, id] }));
   };
 
+  const toggleStudent = (studentId) => {
+    setForm(prev => ({ 
+      ...prev, 
+      studentIds: prev.studentIds.includes(studentId) 
+        ? prev.studentIds.filter(id => id !== studentId) 
+        : [...prev.studentIds, studentId] 
+    }));
+  };
+
+  const filteredStudents = students.filter(student => 
+    student.nome.toLowerCase().includes(studentSearch.toLowerCase())
+  );
+
   const saveSchedule = async (e) => {
     e.preventDefault();
+    
+    // Validações obrigatórias
+    if (!form.instructorId) {
+      alert('Por favor, selecione um instrutor.');
+      return;
+    }
+    if (form.studentIds.length === 0) {
+      alert('Por favor, selecione pelo menos um aluno/paciente.');
+      return;
+    }
+    if (!form.discipline) {
+      alert('Por favor, selecione uma disciplina.');
+      return;
+    }
+    if (form.days.length === 0) {
+      alert('Por favor, selecione pelo menos um dia da semana.');
+      return;
+    }
+    
     setSaving(true);
     try {
       const scheduleRef = await addDoc(collection(db, 'schedules'), {
@@ -135,6 +170,8 @@ const AdminDashboard = () => {
       }
       setShowAddModal(false);
       setForm({ instructorId: '', studentIds: [], discipline: '', days: [], startTime: '10:00', endTime: '11:00', startDate: '', endDate: '' });
+      setStudentSearch('');
+      setActiveTab('instructor');
     } finally {
       setSaving(false);
     }
@@ -247,70 +284,215 @@ const AdminDashboard = () => {
       {showAddModal && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowAddModal(false)} />
-          <div className="absolute inset-x-0 top-8 mx-auto max-w-xl w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
+          <div className="absolute inset-x-0 top-8 mx-auto max-w-4xl w-full rounded-lg p-6 space-y-4" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}`, color: colors.text }}>
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-semibold">Nova agenda recorrente</h4>
-              <button onClick={() => setShowAddModal(false)} className="p-1 rounded border" style={{ borderColor: colors.secondary, color: colors.text }}><X size={16} /></button>
+              <button onClick={() => setShowAddModal(false)} className="p-1 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}><X size={16} /></button>
             </div>
-            <form onSubmit={saveSchedule} className="space-y-3">
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm">Instrutor</label>
-                  <select value={form.instructorId} onChange={(e) => setForm(f => ({ ...f, instructorId: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
-                    <option value="">Selecione</option>
-                    {instructors.map(i => <option key={i.id} value={i.id}>{i.nome}</option>)}
-                  </select>
-                </div>
+            <form onSubmit={saveSchedule} className="space-y-4">
+              {/* Abas */}
+              <div className="flex gap-2 flex-wrap" role="tablist">
+                <button 
+                  type="button" 
+                  role="tab" 
+                  aria-selected={activeTab === 'instructor'} 
+                  onClick={() => setActiveTab('instructor')} 
+                  className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={activeTab === 'instructor' 
+                    ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                    : { backgroundColor: colors.panel, color: colors.text, border: `1px solid ${colors.border}` }
+                  }
+                >
+                  Instrutor e Alunos
+                </button>
+                <button 
+                  type="button" 
+                  role="tab" 
+                  aria-selected={activeTab === 'schedule'} 
+                  onClick={() => setActiveTab('schedule')} 
+                  className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={activeTab === 'schedule' 
+                    ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                    : { backgroundColor: colors.panel, color: colors.text, border: `1px solid ${colors.border}` }
+                  }
+                >
+                  Horários e Recorrência
+                </button>
               </div>
-              <div>
-                <label className="text-sm">Alunos/Pacientes</label>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {students.map(s => (
-                    <button type="button" key={s.id} onClick={() => setForm(f => ({ ...f, studentIds: f.studentIds.includes(s.id) ? f.studentIds.filter(id => id !== s.id) : [...f.studentIds, s.id] }))} className="px-3 py-1.5 rounded text-sm"
-                      style={form.studentIds.includes(s.id) ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#1e1e2f', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>
-                      {s.nome}
-                    </button>
-                  ))}
+
+              {/* Tab: Instrutor e Alunos */}
+              {activeTab === 'instructor' && (
+                <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <Users size={18} />
+                    Instrutor e Alunos/Pacientes
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm block mb-1">Instrutor *</label>
+                      <select 
+                        value={form.instructorId} 
+                        onChange={(e) => setForm(f => ({ ...f, instructorId: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
+                        required
+                      >
+                        <option value="">Selecione um instrutor *</option>
+                        {instructors.map(i => <option key={i.id} value={i.id}>{i.nome}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm block mb-1">Disciplina *</label>
+                      <select 
+                        value={form.discipline} 
+                        onChange={(e) => setForm(f => ({ ...f, discipline: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
+                        required
+                      >
+                        <option value="">Selecione uma disciplina *</option>
+                        {disciplines.map(d => (
+                          <option key={d.value} value={d.value}>{d.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4">
+                    <label className="text-sm block mb-1">Alunos/Pacientes *</label>
+                    <input 
+                      type="text"
+                      placeholder="Buscar por nome..."
+                      value={studentSearch}
+                      onChange={(e) => setStudentSearch(e.target.value)}
+                      className="w-full rounded px-3 py-2 mb-2" 
+                      style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
+                    />
+                    <div className="max-h-40 overflow-y-auto border rounded p-3" style={{ borderColor: colors.border }}>
+                      <div className="flex flex-wrap gap-2">
+                        {filteredStudents.map(s => (
+                          <button 
+                            type="button" 
+                            key={s.id} 
+                            onClick={() => toggleStudent(s.id)} 
+                            className="px-3 py-1.5 rounded text-sm"
+                            style={form.studentIds.includes(s.id) 
+                              ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                              : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                            }
+                          >
+                            {s.nome}
+                          </button>
+                        ))}
+                      </div>
+                      {filteredStudents.length === 0 && studentSearch && (
+                        <div className="text-sm" style={{ color: colors.mutedText }}>
+                          Nenhum aluno encontrado para "{studentSearch}"
+                        </div>
+                      )}
+                    </div>
+                    {form.studentIds.length > 0 && (
+                      <div className="mt-2 text-sm" style={{ color: colors.mutedText }}>
+                        Selecionados: {form.studentIds.length} aluno(s)
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="text-sm">Disciplina</label>
-                <input value={form.discipline} onChange={(e) => setForm(f => ({ ...f, discipline: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-              </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm">Início da recorrência (opcional)</label>
-                  <input type="date" value={form.startDate} onChange={(e) => setForm(f => ({ ...f, startDate: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+              )}
+
+              {/* Tab: Horários e Recorrência */}
+              {activeTab === 'schedule' && (
+                <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <Calendar size={18} />
+                    Horários e Recorrência
+                  </h3>
+                  
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-sm block mb-1">Início</label>
+                      <input 
+                        type="time" 
+                        value={form.startTime} 
+                        onChange={(e) => setForm(f => ({ ...f, startTime: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm block mb-1">Fim</label>
+                      <input 
+                        type="time" 
+                        value={form.endTime} 
+                        onChange={(e) => setForm(f => ({ ...f, endTime: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-sm block mb-1">Dias da semana *</label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {daysOfWeek.map(d => (
+                        <button 
+                          type="button" 
+                          key={d.id} 
+                          onClick={() => toggleDay(d.id)} 
+                          className="px-3 py-1.5 rounded text-sm"
+                          style={form.days.includes(d.id) 
+                            ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } 
+                            : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                          }
+                        >
+                          {d.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3 mt-4">
+                    <div>
+                      <label className="text-sm block mb-1">Início da recorrência (opcional)</label>
+                      <input 
+                        type="date" 
+                        value={form.startDate} 
+                        onChange={(e) => setForm(f => ({ ...f, startDate: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm block mb-1">Término da recorrência (opcional)</label>
+                      <input 
+                        type="date" 
+                        value={form.endDate} 
+                        onChange={(e) => setForm(f => ({ ...f, endDate: e.target.value }))} 
+                        className="w-full rounded px-3 py-2" 
+                        style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} 
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm">Término da recorrência (opcional)</label>
-                  <input type="date" value={form.endDate} onChange={(e) => setForm(f => ({ ...f, endDate: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-                </div>
-              </div>
-              <div>
-                <label className="text-sm">Dias da semana</label>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {daysOfWeek.map(d => (
-                    <button type="button" key={d.id} onClick={() => toggleDay(d.id)} className="px-3 py-1.5 rounded text-sm"
-                      style={form.days.includes(d.id) ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#1e1e2f', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm">Início</label>
-                  <input type="time" value={form.startTime} onChange={(e) => setForm(f => ({ ...f, startTime: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-                </div>
-                <div>
-                  <label className="text-sm">Fim</label>
-                  <input type="time" value={form.endTime} onChange={(e) => setForm(f => ({ ...f, endTime: e.target.value }))} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
-                </div>
-              </div>
+              )}
+
               <div className="flex justify-end gap-2">
-                <button type="button" onClick={() => setShowAddModal(false)} className="px-3 py-2 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Cancelar</button>
-                <button type="submit" disabled={saving} className="px-3 py-2 rounded" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>{saving ? 'Salvando...' : 'Salvar'}</button>
+                <button 
+                  type="button" 
+                  onClick={() => setShowAddModal(false)} 
+                  className="px-3 py-2 rounded border" 
+                  style={{ borderColor: colors.border, color: colors.buttonInactiveText }}
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={saving} 
+                  className="px-3 py-2 rounded" 
+                  style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}
+                >
+                  {saving ? 'Salvando...' : 'Salvar'}
+                </button>
               </div>
             </form>
           </div>
@@ -320,10 +502,10 @@ const AdminDashboard = () => {
       {showDetails && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowDetails(null)} />
-          <div className="absolute inset-x-0 top-10 mx-auto max-w-md w-full rounded-lg p-6 space-y-3" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8', color: '#e6e6f0' }}>
+          <div className="absolute inset-x-0 top-10 mx-auto max-w-md w-full rounded-lg p-6 space-y-3" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}`, color: colors.text }}>
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-semibold">Detalhes do horário</h4>
-              <button onClick={() => setShowDetails(null)} className="p-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}><X size={16} /></button>
+              <button onClick={() => setShowDetails(null)} className="p-1 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}><X size={16} /></button>
             </div>
             <div><strong>Instrutor:</strong> {showDetails.instructor?.nome || '—'}</div>
             <div><strong>Alunos/Pacientes:</strong> {(showDetails.students || []).map(s => s?.nome).filter(Boolean).join(', ') || '—'}</div>
@@ -331,7 +513,7 @@ const AdminDashboard = () => {
             <div><strong>Horário:</strong> {showDetails.startTime} - {showDetails.endTime}</div>
             <div><strong>Dias:</strong> {Array.isArray(showDetails.days) ? showDetails.days.map(d => daysOfWeek[d]?.label).join(', ') : '—'}</div>
             <div className="flex justify-end">
-              <button onClick={() => setShowDetails(null)} className="px-3 py-2 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Fechar</button>
+              <button onClick={() => setShowDetails(null)} className="px-3 py-2 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>Fechar</button>
             </div>
           </div>
         </div>

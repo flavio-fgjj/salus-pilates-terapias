@@ -3,10 +3,7 @@ import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from '
 import { db } from '../../firebase.js';
 import { Users, MapPin } from 'react-feather';
 import colors from '../../theme/colors.js';
-
-const allDisciplines = [
-  'Pilates', 'Ballet Infantil', 'Jiu-Jitsu', 'Acupuntura', 'Massagem', 'Quiropraxia', 'Reiki', 'Auriculoterapia ', 'Cone Hindu / Chines', 'Yoga'
-];
+import { allDisciplines } from '../../data/disciplines.js';
 
 const AdminInstructors = () => {
   const [list, setList] = useState([]);
@@ -200,10 +197,10 @@ const AdminInstructors = () => {
              {showFormModal && (
                <div className="fixed inset-0 z-50">
                  <div className="absolute inset-0 bg-black/50" onClick={() => setShowFormModal(false)} />
-                 <div className="absolute inset-x-0 top-2 mx-auto max-w-3xl w-full rounded-lg p-4 space-y-4" style={{ backgroundColor: '#1f2437', border: '1px solid #1d8cf8' }}>
+                 <div className="absolute inset-x-0 top-2 mx-auto max-w-3xl w-full rounded-lg p-4 space-y-4" style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold" style={{ color: '#e6e6f0' }}>{editingId ? 'Editar Instrutor' : 'Novo Instrutor'}</h3>
-              <button onClick={() => setShowFormModal(false)} className="px-3 py-1 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Fechar</button>
+              <h3 className="text-lg font-semibold" style={{ color: colors.text }}>{editingId ? 'Editar Instrutor' : 'Novo Instrutor'}</h3>
+              <button onClick={() => setShowFormModal(false)} className="px-3 py-1 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>Fechar</button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -215,73 +212,73 @@ const AdminInstructors = () => {
                 if (e.key === 'Home') { e.preventDefault(); setActiveTab(order[0]); }
                 if (e.key === 'End') { e.preventDefault(); setActiveTab(order[order.length-1]); }
               }} tabIndex={0}>
-                <button type="button" role="tab" aria-selected={activeTab === 'pessoais'} onClick={() => setActiveTab('pessoais')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'pessoais' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Dados pessoais</button>
-                <button type="button" role="tab" aria-selected={activeTab === 'endereco'} onClick={() => setActiveTab('endereco')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'endereco' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Endereço</button>
-                <button type="button" role="tab" aria-selected={activeTab === 'disciplinas'} onClick={() => setActiveTab('disciplinas')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#1d8cf8]" style={activeTab === 'disciplinas' ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#2a2a40', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>Disciplinas</button>
+                <button type="button" role="tab" aria-selected={activeTab === 'pessoais'} onClick={() => setActiveTab('pessoais')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" style={activeTab === 'pessoais' ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } : { backgroundColor: colors.panel, color: colors.text, border: `1px solid ${colors.border}` }}>Dados pessoais</button>
+                <button type="button" role="tab" aria-selected={activeTab === 'endereco'} onClick={() => setActiveTab('endereco')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" style={activeTab === 'endereco' ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } : { backgroundColor: colors.panel, color: colors.text, border: `1px solid ${colors.border}` }}>Endereço</button>
+                <button type="button" role="tab" aria-selected={activeTab === 'disciplinas'} onClick={() => setActiveTab('disciplinas')} className="px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" style={activeTab === 'disciplinas' ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } : { backgroundColor: colors.panel, color: colors.text, border: `1px solid ${colors.border}` }}>Disciplinas</button>
               </div>
 
                      {activeTab === 'pessoais' && (
-                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                       <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
                          <div className="grid sm:grid-cols-2 gap-3">
                     <div>
                       <label className="text-sm block mb-1">Nome completo</label>
-                      <input name="nome" value={form.nome} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="nome" value={form.nome} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Email</label>
-                      <input name="email" type="email" value={form.email} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="email" type="email" value={form.email} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Telefone</label>
-                      <input name="telefone" value={form.telefone} onChange={handleChange} placeholder="(11) 99999-9999" className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="telefone" value={form.telefone} onChange={handleChange} placeholder="(11) 99999-9999" className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                   </div>
                 </div>
               )}
 
                      {activeTab === 'endereco' && (
-                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                       <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
                          <h4 className="text-sm font-semibold mb-3">Endereço</h4>
                          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     <div>
                       <label className="text-sm block mb-1">CEP</label>
-                      <input name="cep" value={form.cep} onChange={(e) => { handleChange(e); buscarCEP(e.target.value.replace(/\D/g, '')); }} placeholder="00000-000" maxLength={9} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="cep" value={form.cep} onChange={(e) => { handleChange(e); buscarCEP(e.target.value.replace(/\D/g, '')); }} placeholder="00000-000" maxLength={9} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div className="lg:col-span-2">
                       <label className="text-sm block mb-1">Logradouro</label>
-                      <input name="logradouro" value={form.logradouro} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="logradouro" value={form.logradouro} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Número</label>
-                      <input name="numero" value={form.numero} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="numero" value={form.numero} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Complemento</label>
-                      <input name="complemento" value={form.complemento} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="complemento" value={form.complemento} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Bairro</label>
-                      <input name="bairro" value={form.bairro} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="bairro" value={form.bairro} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Cidade</label>
-                      <input name="cidade" value={form.cidade} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="cidade" value={form.cidade} onChange={handleChange} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                     <div>
                       <label className="text-sm block mb-1">Estado</label>
-                      <input name="estado" value={form.estado} onChange={handleChange} maxLength={2} className="w-full rounded px-3 py-2" style={{ backgroundColor: '#1e1e2f', border: '1px solid #1d8cf8', color: '#e6e6f0' }} />
+                      <input name="estado" value={form.estado} onChange={handleChange} maxLength={2} className="w-full rounded px-3 py-2" style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }} />
                     </div>
                   </div>
                 </div>
               )}
 
                      {activeTab === 'disciplinas' && (
-                       <div className="rounded-lg p-4" style={{ backgroundColor: '#2a2a40', border: '1px solid #1d8cf8' }}>
+                       <div className="rounded-lg p-4" style={{ backgroundColor: colors.panel, border: `1px solid ${colors.border}` }}>
                          <h4 className="text-sm font-semibold mb-3">Disciplinas</h4>
                   <div className="flex flex-wrap gap-2">
                     {allDisciplines.map((d) => (
                       <button key={d} type="button" onClick={() => toggleDisciplina(d)} className="px-3 py-1.5 rounded text-sm"
-                        style={form.disciplinas.includes(d) ? { backgroundColor: '#1d8cf8', color: '#0b1324' } : { backgroundColor: '#1e1e2f', color: '#e6e6f0', border: '1px solid #1d8cf8' }}>
+                        style={form.disciplinas.includes(d) ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText } : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }}>
                         {d}
                       </button>
                     ))}
@@ -294,8 +291,8 @@ const AdminInstructors = () => {
               )}
 
               <div className="flex justify-end gap-2">
-                <button type="button" onClick={() => setShowFormModal(false)} className="px-3 py-2 rounded border" style={{ borderColor: '#1d8cf8', color: '#1d8cf8' }}>Cancelar</button>
-                <button type="submit" disabled={loading} className="px-3 py-2 rounded" style={{ backgroundColor: '#1d8cf8', color: '#fff', border: '1px solid #1d8cf8' }}>{loading ? (editingId ? 'Salvando...' : 'Cadastrando...') : (editingId ? 'Salvar' : 'Cadastrar')}</button>
+                <button type="button" onClick={() => setShowFormModal(false)} className="px-3 py-2 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>Cancelar</button>
+                <button type="submit" disabled={loading} className="px-3 py-2 rounded" style={{ backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText, border: `1px solid ${colors.border}` }}>{loading ? (editingId ? 'Salvando...' : 'Cadastrando...') : (editingId ? 'Salvar' : 'Cadastrar')}</button>
               </div>
             </form>
           </div>

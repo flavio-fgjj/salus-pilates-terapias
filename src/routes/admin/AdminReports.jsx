@@ -3,6 +3,7 @@ import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestor
 import { db } from '../../firebase.js';
 import { TrendingUp, AlertCircle, CheckCircle, Users, DollarSign, Calendar, BarChart } from 'react-feather';
 import colors from '../../theme/colors.js';
+import { disciplines, getDisciplineLabel } from '../../data/disciplines.js';
 
 const AdminReports = () => {
   const [students, setStudents] = useState([]);
@@ -146,20 +147,6 @@ const AdminReports = () => {
     })).sort((a, b) => b.total - a.total);
   }, [monthlyPayments, students]);
 
-  const disciplines = [
-    { value: 'pilates', label: 'Pilates' },
-    { value: 'ballet', label: 'Ballet Infantil' },
-    { value: 'jiu-jitsu', label: 'Jiu-Jitsu' },
-    { value: 'acupuntura', label: 'Acupuntura' },
-    { value: 'massagem', label: 'Massagem' },
-    { value: 'quiropraxia', label: 'Quiropraxia' },
-    { value: 'reiki', label: 'Reiki' },
-  ];
-
-  const getDisciplineLabel = (value) => {
-    const discipline = disciplines.find(d => d.value === value);
-    return discipline ? discipline.label : value;
-  };
 
   return (
     <div className="space-y-6">
