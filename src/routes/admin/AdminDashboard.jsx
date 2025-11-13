@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { Calendar, Users, UserCheck, BookOpen, BarChart, Plus, X } from 'react-feather';
+import { Calendar, Users, UserCheck, BookOpen, BarChart, Plus, X, Trash } from 'react-feather';
 import { useUserStore } from '../../store/useUserStore.js';
 import colors from '../../theme/colors.js';
 import { db } from '../../firebase.js';
-import { collection, addDoc, onSnapshot, query, where, doc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, query, where, doc, updateDoc } from 'firebase/firestore';
 import { disciplines } from '../../data/disciplines.js';
 
 const AdminDashboard = () => {
@@ -37,11 +37,13 @@ const AdminDashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDetails, setShowDetails] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState({ instructorId: '', studentIds: [], discipline: '', days: [], startTime: '10:00', endTime: '11:00', startDate: '', endDate: '' });
   const [showAllSchedules, setShowAllSchedules] = useState(false);
   const [studentSearch, setStudentSearch] = useState('');
   const [activeTab, setActiveTab] = useState('instructor');
   const [viewMode, setViewMode] = useState('day'); // 'day', 'week', 'month'
+  const [expandedDay, setExpandedDay] = useState(null); // Para controlar qual dia está expandido na visualização mensal
 
   useEffect(() => {
     const unsubI = onSnapshot(query(collection(db, 'instructors'), where('active', 'in', [true, null])), (snap) => {
@@ -55,6 +57,13 @@ const AdminDashboard = () => {
     });
     return () => { unsubI(); unsubS(); unsubSch(); };
   }, []);
+
+  // Resetar dia expandido quando mudar de visualização
+  useEffect(() => {
+    if (viewMode !== 'month') {
+      setExpandedDay(null);
+    }
+  }, [viewMode]);
 
   const daysOfWeek = [
     { id: 0, label: 'Dom' },
@@ -210,6 +219,27 @@ const AdminDashboard = () => {
       setActiveTab('instructor');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const deleteSchedule = async () => {
+    if (!showDetails?.id) return;
+    
+    const confirmDelete = window.confirm('Tem certeza que deseja excluir este agendamento? Esta ação não pode ser desfeita.');
+    if (!confirmDelete) return;
+    
+    setDeleting(true);
+    try {
+      await updateDoc(doc(db, 'schedules', showDetails.id), {
+        active: false,
+        deletedAt: Date.now()
+      });
+      setShowDetails(null);
+    } catch (error) {
+      console.error('Erro ao excluir agendamento:', error);
+      alert('Erro ao excluir agendamento. Tente novamente.');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -383,11 +413,14 @@ const AdminDashboard = () => {
                   .sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
                 
                 const isToday = dateISO === today.toISOString().slice(0,10);
+                const isExpanded = expandedDay === dateISO;
+                const displayItems = isExpanded ? items : items.slice(0, 3);
+                const hasMore = items.length > 3;
                 
                 return (
                   <div 
                     key={index} 
-                    className={`min-h-[80px] p-1 border rounded ${isToday ? 'ring-2' : ''}`} 
+                    className={`p-1 border rounded ${isToday ? 'ring-2' : ''} ${isExpanded ? 'min-h-[120px]' : 'min-h-[80px]'}`} 
                     style={{ 
                       borderColor: colors.border,
                       backgroundColor: isCurrentMonth ? colors.panelAlt : colors.secondary,
@@ -399,7 +432,7 @@ const AdminDashboard = () => {
                       {date.getDate()}
                     </div>
                     <div className="space-y-1">
-                      {items.slice(0, 3).map((s) => (
+                      {displayItems.map((s) => (
                         <div 
                           key={`${s.id}-${dateISO}`} 
                           className="text-xs p-1 rounded cursor-pointer hover:opacity-80" 
@@ -409,10 +442,21 @@ const AdminDashboard = () => {
                           {s.startTime}
                         </div>
                       ))}
-                      {items.length > 3 && (
-                        <div className="text-xs" style={{ color: colors.mutedText }}>
-                          +{items.length - 3} mais
-                        </div>
+                      {hasMore && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedDay(isExpanded ? null : dateISO);
+                          }}
+                          className="text-xs w-full p-1 rounded cursor-pointer hover:opacity-80 transition"
+                          style={{ 
+                            backgroundColor: colors.secondary, 
+                            color: colors.text, 
+                            border: `1px solid ${colors.border}` 
+                          }}
+                        >
+                          {isExpanded ? 'Ver menos' : `+${items.length - 3} mais`}
+                        </button>
                       )}
                     </div>
                   </div>
@@ -655,8 +699,27 @@ const AdminDashboard = () => {
             <div><strong>Disciplina:</strong> {showDetails.discipline || '—'}</div>
             <div><strong>Horário:</strong> {showDetails.startTime} - {showDetails.endTime}</div>
             <div><strong>Dias:</strong> {Array.isArray(showDetails.days) ? showDetails.days.map(d => daysOfWeek[d]?.label).join(', ') : '—'}</div>
-            <div className="flex justify-end">
-              <button onClick={() => setShowDetails(null)} className="px-3 py-2 rounded border" style={{ borderColor: colors.border, color: colors.buttonInactiveText }}>Fechar</button>
+            <div className="flex justify-between items-center pt-2 border-t" style={{ borderColor: colors.border }}>
+              <button 
+                onClick={deleteSchedule} 
+                disabled={deleting}
+                className="px-3 py-2 rounded flex items-center gap-2 transition-opacity disabled:opacity-50" 
+                style={{ 
+                  backgroundColor: '#dc2626', 
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                <Trash size={16} />
+                {deleting ? 'Excluindo...' : 'Excluir'}
+              </button>
+              <button 
+                onClick={() => setShowDetails(null)} 
+                className="px-3 py-2 rounded border" 
+                style={{ borderColor: colors.border, color: colors.buttonInactiveText }}
+              >
+                Fechar
+              </button>
             </div>
           </div>
         </div>

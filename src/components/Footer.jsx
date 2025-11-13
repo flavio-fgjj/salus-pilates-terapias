@@ -27,7 +27,7 @@ const Footer = () => (
               <a
                 href="https://www.instagram.com/espacosalusbr"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="p-2 rounded-full bg-slate-700 hover:bg-[#B7D0CA] transition"
                 aria-label="Instagram"
               >
