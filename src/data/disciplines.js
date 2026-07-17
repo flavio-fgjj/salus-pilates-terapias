@@ -4,7 +4,7 @@ export const disciplines = [
   { value: 'pilates', label: 'Pilates' },
   { value: 'pilates experimental', label: 'Pilates Experimental' },
   { value: 'krav maga', label: 'Krav Maga' },
-  { value: 'ballet experimental', label: 'Ballet Experimental' },
+  { value: 'krav maga experimental', label: 'Krav Maga Experimental' },
   { value: 'jiu-jitsu', label: 'Jiu-Jitsu' },
   { value: 'jiu-jitsu experimental', label: 'Jiu-Jitsu Experimental' },
   { value: 'acupuntura', label: 'Acupuntura' },
