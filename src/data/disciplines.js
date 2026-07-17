@@ -3,7 +3,7 @@ export const disciplines = [
   { value: 'auriculoterapia', label: 'Auriculoterapia' },
   { value: 'pilates', label: 'Pilates' },
   { value: 'pilates experimental', label: 'Pilates Experimental' },
-  { value: 'ballet', label: 'Ballet Infantil' },
+  { value: 'krav maga', label: 'Krav Maga' },
   { value: 'ballet experimental', label: 'Ballet Experimental' },
   { value: 'jiu-jitsu', label: 'Jiu-Jitsu' },
   { value: 'jiu-jitsu experimental', label: 'Jiu-Jitsu Experimental' },

@@ -5,8 +5,8 @@ const Infantil = () => (
       <p className="text-slate-600 max-w-2xl mx-auto mb-10">Atividades lúdicas para desenvolver corpo e mente das crianças.</p>
       <div className="grid md:grid-cols-2 gap-6 md:gap-10">
         <div className="text-left bg-white rounded-xl border border-emerald-100 p-6 shadow-sm">
-          <h3 className="text-xl font-bold mb-2 text-slate-800">Ballet Infantil</h3>
-          <p className="text-slate-600">Desenvolvimento da coordenação motora, disciplina e expressão corporal.</p>
+          <h3 className="text-xl font-bold mb-2 text-slate-800">Krav Maga</h3>
+          <p className="text-slate-600">Defesa pessoal prática, disciplina e condicionamento físico para crianças.</p>
         </div>
         <div className="text-left bg-white rounded-xl border border-emerald-100 p-6 shadow-sm">
           <h3 className="text-xl font-bold mb-2 text-slate-800">Jiu-Jitsu (até 10 anos)</h3>

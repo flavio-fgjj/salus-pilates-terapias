@@ -37,7 +37,7 @@ const Servicos = () => (
         <h3 className="text-2xl font-bold mb-8 text-[#B7D0CA]">Atividades Infantis</h3>
         <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
           {[
-            { title: 'Ballet Infantil', desc: 'Desenvolvimento da coordenação motora, disciplina e expressão corporal para crianças.' },
+            { title: 'Krav Maga', desc: 'Defesa pessoal prática, disciplina e condicionamento físico para crianças.' },
             { title: 'Jiu-Jitsu (até 10 anos)', desc: 'Autoconfiança, foco e respeito. Aulas divertidas e seguras para os pequenos.' }
           ].map(({ title, desc }) => (
             <div

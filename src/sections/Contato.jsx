@@ -23,14 +23,14 @@ const Contato = () => (
       <p className="text-lg">Av. Pres. Kennedy, 11862 - Vila Caiçara, Praia Grande - SP</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <a
-          href="mailto:contato@salus.com"
+          href="mailto:contato@saluspilates.com.br"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
         >
           <img src={emailIcon} alt="Email" className="w-6 h-6" />
           Email
         </a>
         <a
-          href="https://www.instagram.com/"
+          href="https://www.instagram.com/espacosalusbr/"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center justify-center gap-2 w-32 px-4 py-2 rounded-md bg-transparent hover:bg-[#B7D0CA]/10 text-slate-800 border border-[#B7D0CA] font-semibold transition"
