@@ -42,8 +42,9 @@ const AdminDashboard = () => {
   const [showAllSchedules, setShowAllSchedules] = useState(false);
   const [studentSearch, setStudentSearch] = useState('');
   const [activeTab, setActiveTab] = useState('instructor');
-  const [viewMode, setViewMode] = useState('day'); // 'day', 'week', 'month'
+  const [viewMode, setViewMode] = useState('day'); // 'day', 'week', 'month', 'custom'
   const [expandedDay, setExpandedDay] = useState(null); // Para controlar qual dia está expandido na visualização mensal
+  const [customRange, setCustomRange] = useState({ start: '', end: '' });
 
   useEffect(() => {
     const unsubI = onSnapshot(query(collection(db, 'instructors'), where('active', 'in', [true, null])), (snap) => {
@@ -136,6 +137,29 @@ const AdminDashboard = () => {
   };
 
   const monthDates = getMonthDates(today);
+
+  // Função para obter as datas do período customizado
+  const MAX_CUSTOM_RANGE_DAYS = 92;
+  const getCustomDates = (startISO, endISO) => {
+    if (!startISO || !endISO) return [];
+    const start = new Date(`${startISO}T00:00:00`);
+    const end = new Date(`${endISO}T00:00:00`);
+    if (end < start) return [];
+    const days = [];
+    const cursor = new Date(start);
+    while (cursor <= end && days.length < MAX_CUSTOM_RANGE_DAYS) {
+      days.push(new Date(cursor));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return days;
+  };
+
+  const customDates = useMemo(
+    () => getCustomDates(customRange.start, customRange.end),
+    [customRange.start, customRange.end]
+  );
+  const customRangeTruncated = customRange.start && customRange.end
+    && Math.round((new Date(`${customRange.end}T00:00:00`) - new Date(`${customRange.start}T00:00:00`)) / 86400000) + 1 > MAX_CUSTOM_RANGE_DAYS;
 
   const todaysItems = useMemo(() => {
     const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
@@ -317,6 +341,16 @@ const AdminDashboard = () => {
               >
                 Mês
               </button>
+              <button
+                onClick={() => setViewMode('custom')}
+                className={`px-3 py-1.5 rounded text-sm ${viewMode === 'custom' ? 'text-white' : ''}`}
+                style={viewMode === 'custom'
+                  ? { backgroundColor: colors.buttonActiveBg, color: colors.buttonActiveText }
+                  : { backgroundColor: colors.secondary, color: colors.text, border: `1px solid ${colors.border}` }
+                }
+              >
+                Personalizado
+              </button>
             </div>
             {viewMode === 'day' && (
               <label className="text-sm flex items-center gap-2" style={{ color: colors.mutedText }}>
@@ -463,6 +497,90 @@ const AdminDashboard = () => {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* Visualização Personalizada (período de datas) */}
+        {viewMode === 'custom' && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-end gap-3">
+              <div>
+                <label className="text-sm block mb-1">De</label>
+                <input
+                  type="date"
+                  value={customRange.start}
+                  max={customRange.end || undefined}
+                  onChange={(e) => setCustomRange(r => ({ ...r, start: e.target.value }))}
+                  className="rounded px-3 py-2"
+                  style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
+                />
+              </div>
+              <div>
+                <label className="text-sm block mb-1">Até</label>
+                <input
+                  type="date"
+                  value={customRange.end}
+                  min={customRange.start || undefined}
+                  onChange={(e) => setCustomRange(r => ({ ...r, end: e.target.value }))}
+                  className="rounded px-3 py-2"
+                  style={{ backgroundColor: colors.secondary, border: `1px solid ${colors.border}`, color: colors.text }}
+                />
+              </div>
+            </div>
+
+            {!customRange.start || !customRange.end ? (
+              <div className="text-sm" style={{ color: colors.mutedText }}>Selecione as datas de início e fim para ver a agenda do período.</div>
+            ) : customDates.length === 0 ? (
+              <div className="text-sm" style={{ color: colors.mutedText }}>A data final deve ser igual ou posterior à data inicial.</div>
+            ) : (
+              <>
+                {customRangeTruncated && (
+                  <div className="text-sm" style={{ color: colors.mutedText }}>
+                    Período muito longo, exibindo os primeiros {MAX_CUSTOM_RANGE_DAYS} dias.
+                  </div>
+                )}
+                <div className="space-y-3">
+                  {customDates.map((d) => {
+                    const dow = d.getDay();
+                    const dateISO = d.toISOString().slice(0, 10);
+                    const items = schedules
+                      .filter(s => s.active !== false && Array.isArray(s.days) && s.days.includes(dow))
+                      .filter(s => {
+                        const startOK = !s.startDate || new Date(dateISO) >= new Date(s.startDate);
+                        const endOK = !s.endDate || new Date(dateISO) <= new Date(s.endDate);
+                        return startOK && endOK;
+                      })
+                      .sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
+                    const instMap = Object.fromEntries(instructors.map(i => [i.id, i]));
+                    const studMap = Object.fromEntries(students.map(s => [s.id, s]));
+                    return (
+                      <div key={dateISO} className="rounded border p-3" style={{ borderColor: colors.border }}>
+                        <div className="font-semibold mb-2">{d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</div>
+                        {items.length === 0 ? (
+                          <div className="text-sm" style={{ color: colors.mutedText }}>Sem horários</div>
+                        ) : (
+                          <div className="space-y-2">
+                            {items.map((s) => (
+                              <button
+                                key={`${s.id}-${dateISO}`}
+                                onClick={() => setShowDetails({ ...s, instructor: instMap[s.instructorId] || null, students: (s.studentIds || []).map(id => studMap[id]).filter(Boolean) })}
+                                className="w-full text-left rounded px-3 py-2 hover:opacity-90"
+                                style={{ backgroundColor: colors.panelAlt, border: `1px solid ${colors.border}` }}
+                              >
+                                <div className="font-semibold">{s.startTime} - {s.endTime} • {s.discipline || 'Atividade'}</div>
+                                <div className="text-sm" style={{ color: colors.mutedText }}>
+                                  Instrutor: {instMap[s.instructorId]?.nome || '—'} • Alunos/Pacientes: {(s.studentIds || []).map(id => studMap[id]?.nome).filter(Boolean).join(', ') || '—'}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

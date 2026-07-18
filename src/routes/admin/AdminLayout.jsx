@@ -1,11 +1,42 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { Home, LogIn, UserPlus, LogOut, Menu, X, User, BookOpen, CreditCard, Smile, TrendingUp, DollarSign, HelpCircle } from 'react-feather';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import colors from '../../theme/colors.js';
 import { useUserStore } from '../../store/useUserStore.js';
 
+// The <link rel="manifest"> is injected once at build time (the site has a single
+// index.html shared by the marketing pages and /admin), but the service worker that
+// actually makes the app installable is only ever registered here, scoped to /admin/ —
+// so "Add to Home Screen" only becomes available inside the admin panel. The
+// iOS/theme meta tags are added/removed with the same admin-only lifecycle.
+const useAdminPwa = () => {
+  useEffect(() => {
+    const metaTags = [
+      { name: 'theme-color', content: colors.primary },
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-title', content: 'Salus Admin' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+    ].map(({ name, content }) => {
+      const el = document.createElement('meta');
+      el.name = name;
+      el.content = content;
+      document.head.appendChild(el);
+      return el;
+    });
+
+    if ('serviceWorker' in navigator && import.meta.env.PROD) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/admin/' }).catch(() => {});
+    }
+
+    return () => {
+      metaTags.forEach((el) => el.remove());
+    };
+  }, []);
+};
+
 const AdminLayout = () => {
+  useAdminPwa();
   const { user, logout } = useAuth();
   const userStore = useUserStore();
   const role = userStore?.role;
